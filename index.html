@@ -1,405 +1,68 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ParadoxClient</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мій сайт</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #111;
+            color: white;
+            text-align: center;
+            margin: 0;
+        }
 
-<style>
+        nav {
+            background: #1b1b1b;
+            padding: 15px;
+        }
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:'Poppins',sans-serif;
-}
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 18px;
+        }
 
-body{
-    background:#050816;
-    color:white;
-    overflow-x:hidden;
-}
+        .community {
+            margin-top: 50px;
+        }
 
-canvas{
-    position:fixed;
-    top:0;
-    left:0;
-    z-index:-1;
-}
+        .btn {
+            display: inline-block;
+            padding: 12px 25px;
+            margin: 10px;
+            border-radius: 10px;
+            text-decoration: none;
+            color: white;
+            background: #7b2cff;
+            transition: 0.3s;
+        }
 
-nav{
-    width:100%;
-    padding:20px 8%;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    position:fixed;
-    top:0;
-    background:rgba(0,0,0,0.25);
-    backdrop-filter:blur(12px);
-    z-index:999;
-}
-
-.logo{
-    font-size:28px;
-    font-weight:700;
-    background:linear-gradient(90deg,#00c3ff,#8f00ff);
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-}
-
-.nav-right{
-    display:flex;
-    gap:12px;
-}
-
-.lang-btn{
-    padding:10px 16px;
-    border:none;
-    border-radius:12px;
-    background:#131b2e;
-    color:white;
-    cursor:pointer;
-    transition:0.3s;
-}
-
-.lang-btn:hover{
-    transform:translateY(-2px);
-}
-
-.hero{
-    min-height:100vh;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    text-align:center;
-    padding:20px;
-}
-
-.hero h1{
-    font-size:64px;
-    line-height:1.1;
-    background:linear-gradient(90deg,#00c3ff,#8f00ff);
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-    animation:float 4s ease-in-out infinite;
-}
-
-.hero p{
-    max-width:700px;
-    margin-top:20px;
-    font-size:18px;
-    color:#b9c0d4;
-    line-height:1.8;
-}
-
-.buy-btn{
-    display:inline-block;
-    margin-top:35px;
-    padding:18px 45px;
-    border-radius:18px;
-    font-size:20px;
-    font-weight:600;
-    color:white;
-    background:linear-gradient(90deg,#00c3ff,#8f00ff);
-    box-shadow:0 0 35px rgba(143,0,255,0.5);
-    transition:0.4s;
-    text-decoration:none;
-}
-
-.buy-btn:hover{
-    transform:scale(1.08);
-    box-shadow:0 0 50px rgba(0,195,255,0.8);
-}
-
-.cards{
-    display:flex;
-    justify-content:center;
-    flex-wrap:wrap;
-    gap:30px;
-    padding:100px 8%;
-}
-
-.card{
-    width:320px;
-    background:rgba(255,255,255,0.05);
-    border:1px solid rgba(255,255,255,0.1);
-    backdrop-filter:blur(15px);
-    border-radius:24px;
-    padding:35px;
-    transition:0.5s;
-    transform-style:preserve-3d;
-}
-
-.card:hover{
-    transform:rotateY(10deg) rotateX(5deg) scale(1.05);
-}
-
-.card h2{
-    margin-bottom:15px;
-    font-size:26px;
-}
-
-.card p{
-    color:#b9c0d4;
-    line-height:1.7;
-    font-size:16px;
-}
-
-footer{
-    text-align:center;
-    padding:40px;
-    color:#7f8aa8;
-}
-
-@keyframes float{
-
-    0%{
-        transform:translateY(0px);
-    }
-
-    50%{
-        transform:translateY(-12px);
-    }
-
-    100%{
-        transform:translateY(0px);
-    }
-
-}
-
-@media(max-width:768px){
-
-    .hero h1{
-        font-size:42px;
-    }
-
-    .hero p{
-        font-size:16px;
-    }
-
-    .card{
-        width:100%;
-    }
-
-}
-
-</style>
+        .btn:hover {
+            transform: scale(1.05);
+        }
+    </style>
 </head>
-
 <body>
 
-<canvas id="bg"></canvas>
-
-<nav>
-
-    <div class="logo">
-        ParadoxClient
-    </div>
-
-    <div class="nav-right">
-
-        <button class="lang-btn" onclick="setLang('en')">
-            EN
-        </button>
-
-        <button class="lang-btn" onclick="setLang('ua')">
-            UA
-        </button>
-
-    </div>
-
-</nav>
-
-<section class="hero">
-
-    <h1 id="title">
-        NEXT GEN CLIENT
-    </h1>
-
-    <p id="desc">
-        Ultra modern Minecraft client with smooth performance,
-        futuristic design and powerful features.
-    </p>
-
-    <a href="client.zip" download class="buy-btn" id="buy">
-        DOWNLOAD CLIENT
-    </a>
-
-</section>
-
-<section class="cards">
-
-    <div class="card">
-
-        <h2 id="f1">
-            Performance
-        </h2>
-
-        <p id="f1d">
-            Maximum FPS boost and smooth gameplay experience.
-        </p>
-
-    </div>
-
-    <div class="card">
-
-        <h2 id="f2">
-            Modern UI
-        </h2>
-
-        <p id="f2d">
-            Beautiful futuristic interface with animations.
-        </p>
-
-    </div>
-
-    <div class="card">
-
-        <h2 id="f3">
-            Security
-        </h2>
-
-        <p id="f3d">
-            Protected systems and stable updates.
-        </p>
-
-    </div>
-
-</section>
-
-<footer>
-    © 2026 ParadoxClient
-</footer>
-
-<script>
-
-const texts = {
-
-    en:{
-
-        title:"NEXT GEN CLIENT",
-
-        desc:"Ultra modern Minecraft client with smooth performance, futuristic design and powerful features.",
-
-        buy:"DOWNLOAD CLIENT",
-
-        f1:"Performance",
-
-        f1d:"Maximum FPS boost and smooth gameplay experience.",
-
-        f2:"Modern UI",
-
-        f2d:"Beautiful futuristic interface with animations.",
-
-        f3:"Security",
-
-        f3d:"Protected systems and stable updates."
-
-    },
-
-    ua:{
-
-        title:"КЛІЄНТ НОВОГО ПОКОЛІННЯ",
-
-        desc:"Сучасний Minecraft клієнт з плавною роботою, красивим дизайном та потужними можливостями.",
-
-        buy:"СКАЧАТИ КЛІЄНТ",
-
-        f1:"Продуктивність",
-
-        f1d:"Максимальний FPS та плавна гра.",
-
-        f2:"Сучасний UI",
-
-        f2d:"Красивий футуристичний інтерфейс.",
-
-        f3:"Безпека",
-
-        f3d:"Захищені системи та стабільні оновлення."
-
-    }
-
-}
-
-function setLang(lang){
-
-    document.getElementById("title").innerText = texts[lang].title
-
-    document.getElementById("desc").innerText = texts[lang].desc
-
-    document.getElementById("buy").innerText = texts[lang].buy
-
-    document.getElementById("f1").innerText = texts[lang].f1
-    document.getElementById("f1d").innerText = texts[lang].f1d
-
-    document.getElementById("f2").innerText = texts[lang].f2
-    document.getElementById("f2d").innerText = texts[lang].f2d
-
-    document.getElementById("f3").innerText = texts[lang].f3
-    document.getElementById("f3d").innerText = texts[lang].f3d
-
-}
-
-const canvas = document.getElementById("bg");
-const ctx = canvas.getContext("2d");
-
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-
-let particles = [];
-
-for(let i=0;i<120;i++){
-
-    particles.push({
-
-        x:Math.random()*canvas.width,
-        y:Math.random()*canvas.height,
-        r:Math.random()*3,
-        dx:(Math.random()-0.5),
-        dy:(Math.random()-0.5)
-
-    });
-
-}
-
-function animate(){
-
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-
-    particles.forEach(p=>{
-
-        ctx.beginPath();
-
-        ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-
-        ctx.fillStyle="#8f00ff";
-
-        ctx.fill();
-
-        p.x += p.dx;
-        p.y += p.dy;
-
-        if(p.x < 0 || p.x > canvas.width){
-            p.dx *= -1;
-        }
-
-        if(p.y < 0 || p.y > canvas.height){
-            p.dy *= -1;
-        }
-
-    });
-
-    requestAnimationFrame(animate);
-
-}
-
-animate();
-
-</script>
+    <nav>
+        <a href="#community">Community</a>
+    </nav>
+
+    <section id="community" class="community">
+        <h1>Community</h1>
+
+        <a class="btn" href="https://t.me/kimp1ntyao666" target="_blank">
+            Telegram Channel
+        </a>
+
+        <a class="btn" href="https://discord.gg/6U5Z4V92y" target="_blank">
+            Discord Server
+        </a>
+    </section>
 
 </body>
 </html>
