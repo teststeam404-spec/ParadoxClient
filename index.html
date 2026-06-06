@@ -1,130 +1,78 @@
 <!DOCTYPE html>
-<html lang="uk">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ParadoxClient</title>
-
+<title>Language Site</title>
 <style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial,sans-serif;
+/* ====== BACKGROUND (shader style) ====== */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  color: white;
+  overflow: hidden;
+  height: 100vh;
 }
 
-body{
-    background:#0b0b12;
-    color:white;
+/* animated “Minecraft shader-like” background */
+.bg {
+  position: fixed;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at 20% 20%, #4f9cff, transparent 40%),
+              radial-gradient(circle at 80% 30%, #7a5cff, transparent 45%),
+              radial-gradient(circle at 50% 80%, #00ffc8, transparent 40%),
+              radial-gradient(circle at 30% 60%, #ff3df2, transparent 50%);
+  filter: blur(60px);
+  animation: moveBg 12s infinite alternate ease-in-out;
 }
 
-/* background */
-.bg{
-    position:fixed;
-    width:100%;
-    height:100%;
-    background:
-    radial-gradient(circle at 20% 20%, #7b2cff55, transparent 40%),
-    radial-gradient(circle at 80% 30%, #9d4dff44, transparent 40%),
-    radial-gradient(circle at 50% 80%, #5f00ff33, transparent 40%);
-    z-index:-1;
-    animation:move 6s infinite alternate;
+@keyframes moveBg {
+  0% { transform: translate(-10%, -10%) scale(1); }
+  100% { transform: translate(-20%, -20%) scale(1.2); }
 }
 
-@keyframes move{
-    from{transform:scale(1);}
-    to{transform:scale(1.1);}
+/* dark overlay */
+.overlay {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.55);
 }
 
-/* header */
-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:20px 8%;
-    background:#111;
+/* ====== UI ====== */
+.container {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  top: 30%;
 }
 
-.logo{
-    font-size:22px;
-    font-weight:bold;
-    color:#a855ff;
+h1 {
+  font-size: 40px;
+  margin-bottom: 10px;
 }
 
-nav a{
-    color:white;
-    margin:0 10px;
-    text-decoration:none;
+p {
+  font-size: 18px;
+  opacity: 0.9;
 }
 
-.lang{
-    background:#7b2cff;
-    border:none;
-    padding:8px 12px;
-    color:white;
-    border-radius:8px;
-    cursor:pointer;
+button {
+  padding: 10px 18px;
+  margin: 5px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  background: rgba(255,255,255,0.15);
+  color: white;
+  backdrop-filter: blur(10px);
+  transition: 0.3s;
 }
 
-/* hero */
-.hero{
-    text-align:center;
-    padding:80px 20px;
-}
-
-.hero h1{
-    font-size:50px;
-}
-
-.hero p{
-    margin-top:10px;
-    color:#ccc;
-}
-
-.btn{
-    display:inline-block;
-    margin-top:25px;
-    padding:14px 30px;
-    background:#7b2cff;
-    color:white;
-    text-decoration:none;
-    border-radius:10px;
-    transition:0.3s;
-}
-
-.btn:hover{
-    transform:scale(1.05);
-}
-
-/* features */
-.features{
-    padding:60px 10%;
-    text-align:center;
-}
-
-.grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-    gap:20px;
-    margin-top:30px;
-}
-
-.card{
-    background:#181824;
-    padding:20px;
-    border-radius:12px;
-}
-
-/* community */
-.community{
-    padding:60px 10%;
-    text-align:center;
-}
-
-footer{
-    text-align:center;
-    padding:20px;
-    color:#888;
+button:hover {
+  background: rgba(255,255,255,0.3);
+  transform: scale(1.05);
 }
 </style>
 </head>
@@ -132,82 +80,40 @@ footer{
 <body>
 
 <div class="bg"></div>
+<div class="overlay"></div>
 
-<header>
-    <div class="logo">ParadoxClient</div>
+<div class="container">
+  <div>
+    <button onclick="setLang('ua')">Українська</button>
+    <button onclick="setLang('en')">English</button>
+  </div>
 
-    <nav>
-        <a href="#features">Features</a>
-        <a href="#community">Community</a>
-    </nav>
-
-    <button class="lang" onclick="toggleLang()">🇺🇦 / 🇬🇧</button>
-</header>
-
-<section class="hero">
-    <h1 id="title">ParadoxClient</h1>
-    <p id="desc">Сучасний клієнт із красивим інтерфейсом.</p>
-
-    <a class="btn" id="downloadBtn" href="ParadoxClient%20Beta%202.5.zip" download>
-        Скачати клієнт
-    </a>
-</section>
-
-<section class="features" id="features">
-    <h2 id="featuresTitle">Features</h2>
-
-    <div class="grid">
-        <div class="card">
-            <h3>⚡ Fast</h3>
-            <p id="f1">Швидка робота</p>
-        </div>
-
-        <div class="card">
-            <h3>🎨 UI</h3>
-            <p id="f2">Красивий дизайн</p>
-        </div>
-
-        <div class="card">
-            <h3>🚀 Optimization</h3>
-            <p id="f3">Оптимізація продуктивності</p>
-        </div>
-
-        <div class="card">
-            <h3>🔒 Stability</h3>
-            <p id="f4">Стабільна робота</p>
-        </div>
-    </div>
-</section>
-
-<section class="community" id="community">
-    <h2 id="communityTitle">Community</h2>
-
-    <a class="btn" href="https://t.me/kimp1ntyao666" target="_blank">
-        Telegram
-    </a>
-
-    <a class="btn" href="https://discord.gg/6U5Z4V92y" target="_blank">
-        Discord
-    </a>
-</section>
-
-<footer>
-    © ParadoxClient
-</footer>
+  <h1 id="title"></h1>
+  <p id="text"></p>
+</div>
 
 <script>
-let ua = true;
+const lang = {
+  ua: {
+    title: "Привіт 👋",
+    text: "Це сайт з перемиканням мов і красивим фоном як shader ефект."
+  },
+  en: {
+    title: "Hello 👋",
+    text: "This is a website with language switch and a shader-like animated background."
+  }
+};
 
-function toggleLang(){
-    ua = !ua;
+function setLang(l) {
+  document.getElementById("title").innerText = lang[l].title;
+  document.getElementById("text").innerText = lang[l].text;
+  localStorage.setItem("lang", l);
+}
 
-    if(ua){
-        document.getElementById("title").innerText="ParadoxClient";
-        document.getElementById("desc").innerText="Сучасний клієнт із красивим інтерфейсом.";
-        document.getElementById("downloadBtn").innerText="Скачати клієнт";
-        document.getElementById("featuresTitle").innerText="Можливості";
-        document.getElementById("communityTitle").innerText="Спільнота";
+window.onload = () => {
+  setLang(localStorage.getItem("lang") || "ua");
+};
+</script>
 
-        document.getElementById("f1").innerText="Швидка робота";
-        document.getElementById("f2").innerText="Красивий дизайн";
-        document.getElementById("f3").
+</body>
+</html>
