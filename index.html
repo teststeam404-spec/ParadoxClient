@@ -1,68 +1,81 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Мій сайт</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ParadoxClient</title>
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #111;
-            color: white;
-            text-align: center;
-            margin: 0;
-        }
+<style>
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#0f0f0f;
+    color:white;
+}
 
-        nav {
-            background: #1b1b1b;
-            padding: 15px;
-        }
+nav{
+    background:#161616;
+    padding:15px;
+    text-align:center;
+}
 
-        nav a {
-            color: white;
-            text-decoration: none;
-            margin: 0 15px;
-            font-size: 18px;
-        }
+nav a{
+    color:white;
+    text-decoration:none;
+    margin:0 15px;
+    font-size:18px;
+}
 
-        .community {
-            margin-top: 50px;
-        }
+section{
+    padding:60px 20px;
+    text-align:center;
+}
 
-        .btn {
-            display: inline-block;
-            padding: 12px 25px;
-            margin: 10px;
-            border-radius: 10px;
-            text-decoration: none;
-            color: white;
-            background: #7b2cff;
-            transition: 0.3s;
-        }
+.btn{
+    display:inline-block;
+    padding:15px 30px;
+    margin:10px;
+    background:#7b2cff;
+    color:white;
+    text-decoration:none;
+    border-radius:12px;
+    font-size:18px;
+    font-weight:bold;
+}
 
-        .btn:hover {
-            transform: scale(1.05);
-        }
-    </style>
+.btn:hover{
+    opacity:0.9;
+}
+</style>
 </head>
+
 <body>
 
-    <nav>
-        <a href="#community">Community</a>
-    </nav>
+<nav>
+    <a href="#download">Головна</a>
+    <a href="#community">Community</a>
+</nav>
 
-    <section id="community" class="community">
-        <h1>Community</h1>
+<section id="download">
+    <h1>ParadoxClient</h1>
+    <p>Завантажте останню версію клієнта.</p>
 
-        <a class="btn" href="https://t.me/kimp1ntyao666" target="_blank">
-            Telegram Channel
-        </a>
+    <a href="ParadoxClient%20Beta%202.5.zip" download class="btn">
+        Скачати клієнт
+    </a>
+</section>
 
-        <a class="btn" href="https://discord.gg/6U5Z4V92y" target="_blank">
-            Discord Server
-        </a>
-    </section>
+<section id="community">
+    <h1>Community</h1>
+
+    <a href="https://t.me/kimp1ntyao666" target="_blank" class="btn">
+        Telegram
+    </a>
+
+    <a href="https://discord.gg/6U5Z4V92y" target="_blank" class="btn">
+        Discord
+    </a>
+</section>
 
 </body>
 </html>
