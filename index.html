@@ -6,28 +6,36 @@
 <title>ParadoxClient</title>
 
 <style>
-body {
+* {
   margin: 0;
-  font-family: Arial;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
   color: white;
+  min-height: 100vh;
   overflow-x: hidden;
 }
 
-/* background */
+/* BACKGROUND */
 .bg {
   position: fixed;
   inset: 0;
-  background: radial-gradient(circle at 20% 20%, #6a5cff, transparent 40%),
-              radial-gradient(circle at 80% 30%, #00d4ff, transparent 45%),
-              radial-gradient(circle at 50% 80%, #ff4fd8, transparent 45%);
-  filter: blur(80px);
-  animation: move 10s infinite alternate;
+  background:
+    radial-gradient(circle at 20% 20%, #7c5cff, transparent 40%),
+    radial-gradient(circle at 80% 30%, #00d4ff, transparent 45%),
+    radial-gradient(circle at 50% 80%, #ff4fd8, transparent 45%),
+    radial-gradient(circle at 30% 60%, #00ff9d, transparent 50%);
+  filter: blur(85px);
+  animation: move 12s infinite alternate ease-in-out;
   z-index: -2;
 }
 
 @keyframes move {
-  0% { transform: scale(1); }
-  100% { transform: scale(1.2); }
+  0% { transform: scale(1) translate(-5%, -5%); }
+  100% { transform: scale(1.25) translate(-10%, -10%); }
 }
 
 .overlay {
@@ -37,58 +45,81 @@ body {
   z-index: -1;
 }
 
-/* layout */
-.container {
+/* NAV */
+nav {
+  display: flex;
+  justify-content: space-between;
+  padding: 18px 25px;
+  position: fixed;
+  width: 100%;
+  backdrop-filter: blur(10px);
+  background: rgba(0,0,0,0.25);
+}
+
+.logo {
+  font-weight: bold;
+  font-size: 18px;
+}
+
+/* HERO */
+.hero {
   text-align: center;
-  padding-top: 120px;
+  padding-top: 140px;
 }
 
-h1 {
-  font-size: 50px;
+.hero h1 {
+  font-size: 54px;
 }
 
-p {
-  max-width: 600px;
-  margin: 10px auto;
+.hero p {
+  margin-top: 10px;
   opacity: 0.85;
+  max-width: 650px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-/* buttons */
+/* BUTTONS */
 .btn {
   display: inline-block;
   margin: 10px;
   padding: 12px 18px;
   border-radius: 12px;
-  border: none;
-  cursor: pointer;
   text-decoration: none;
   color: white;
-  background: rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.12);
+  transition: 0.3s;
+  border: none;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
 }
 
 .btn:hover {
   transform: scale(1.05);
+  background: rgba(255,255,255,0.25);
 }
 
-.download {
+.primary {
   background: linear-gradient(90deg,#00ff9d,#00d4ff);
   color: black;
   font-weight: bold;
 }
 
-/* features */
+/* FEATURES */
 .features {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
-  gap: 10px;
-  max-width: 800px;
+  gap: 12px;
+  max-width: 900px;
   margin: 40px auto;
+  padding: 20px;
 }
 
 .card {
   padding: 15px;
-  background: rgba(255,255,255,0.1);
   border-radius: 12px;
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(10px);
 }
 </style>
 </head>
@@ -98,70 +129,66 @@ p {
 <div class="bg"></div>
 <div class="overlay"></div>
 
-<div class="container">
+<nav>
+  <div class="logo">ParadoxClient</div>
+</nav>
+
+<section class="hero">
   <h1>ParadoxClient</h1>
   <p id="text"></p>
 
-  <!-- REAL DOWNLOAD FIX -->
-  <button class="btn download" onclick="downloadFile()">Download Client</button>
-
   <div>
-    <button class="btn" onclick="setLang('ua')">UA</button>
-    <button class="btn" onclick="setLang('en')">EN</button>
-  </div>
-
-  <div>
+    <button class="btn primary" onclick="downloadClient()">Download Client</button>
     <a class="btn" href="https://t.me/kimp1ntyao666" target="_blank">Telegram</a>
     <a class="btn" href="https://discord.gg/6U5Z4V92y" target="_blank">Discord</a>
   </div>
-</div>
 
-<div class="features">
+  <div style="margin-top:10px;">
+    <button class="btn" onclick="setLang('ua')">UA</button>
+    <button class="btn" onclick="setLang('en')">EN</button>
+  </div>
+</section>
+
+<section class="features">
   <div class="card" id="f1"></div>
   <div class="card" id="f2"></div>
   <div class="card" id="f3"></div>
   <div class="card" id="f4"></div>
-</div>
+</section>
 
 <script>
 const data = {
   ua: {
-    text: "ParadoxClient — швидкий, оптимізований і красивий клієнт.",
-    f1: "⚡ Optimization",
+    text: "ParadoxClient — оптимізований клієнт з високою швидкістю, стабільністю та гарною візуальною системою.",
+    f1: "⚡ Optimization system",
     f2: "🚀 Fast work",
-    f3: "🎨 Good visuals",
-    f4: "🧠 Best performance"
+    f3: "🎨 Very good visuals",
+    f4: "🧠 High performance boost"
   },
   en: {
-    text: "ParadoxClient — fast, optimized and visually clean client.",
-    f1: "⚡ Optimization",
+    text: "ParadoxClient — optimized client with speed, stability and modern visuals.",
+    f1: "⚡ Optimization system",
     f2: "🚀 Fast work",
-    f3: "🎨 Good visuals",
-    f4: "🧠 Best performance"
+    f3: "🎨 Very good visuals",
+    f4: "🧠 High performance boost"
   }
 };
 
 function setLang(l) {
   document.getElementById("text").innerText = data[l].text;
-
   document.getElementById("f1").innerText = data[l].f1;
   document.getElementById("f2").innerText = data[l].f2;
   document.getElementById("f3").innerText = data[l].f3;
   document.getElementById("f4").innerText = data[l].f4;
+  localStorage.setItem("lang", l);
 }
 
-/* REAL DOWNLOAD (100% WORKS) */
-function downloadFile() {
-  const a = document.createElement("a");
-  a.href = "client.zip"; // поклади файл в ту ж папку
-  a.download = "client.zip";
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-}
+/* ✅ 100% WORKING DOWNLOAD FIX */
+function downloadClient() {
+  const url = "./client.zip"; // файл у root репозиторію
 
-window.onload = () => setLang("ua");
-</script>
-
-</body>
-</html>
+  fetch(url)
+    .then(r => {
+      if (!r.ok) throw new Error("File not found");
+      return r.blob();
+    })
