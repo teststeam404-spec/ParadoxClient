@@ -3,10 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pro Landing</title>
+<title>ParadoxClient</title>
 
 <style>
-/* ===== RESET ===== */
 * {
   margin: 0;
   padding: 0;
@@ -16,58 +15,58 @@
 
 body {
   color: white;
-  background: black;
+  min-height: 100vh;
   overflow-x: hidden;
 }
 
-/* ===== SHADER BACKGROUND ===== */
+/* ===== BACKGROUND ===== */
 .bg {
   position: fixed;
   inset: 0;
-  background: radial-gradient(circle at 15% 20%, #6a5cff, transparent 40%),
-              radial-gradient(circle at 85% 30%, #00d4ff, transparent 45%),
-              radial-gradient(circle at 50% 80%, #ff4fd8, transparent 45%),
-              radial-gradient(circle at 30% 60%, #00ff9d, transparent 50%);
-  filter: blur(90px);
-  animation: move 14s infinite alternate ease-in-out;
+  background:
+    radial-gradient(circle at 20% 20%, #7c5cff, transparent 40%),
+    radial-gradient(circle at 80% 30%, #00d4ff, transparent 45%),
+    radial-gradient(circle at 50% 80%, #ff4fd8, transparent 45%),
+    radial-gradient(circle at 30% 60%, #00ff9d, transparent 50%);
+  filter: blur(85px);
+  animation: move 12s infinite alternate ease-in-out;
   z-index: -2;
 }
 
 @keyframes move {
-  0% { transform: translate(-5%, -5%) scale(1); }
-  100% { transform: translate(-12%, -10%) scale(1.25); }
+  0% { transform: scale(1) translate(-5%, -5%); }
+  100% { transform: scale(1.25) translate(-10%, -10%); }
 }
 
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.6);
+  background: rgba(0,0,0,0.55);
   z-index: -1;
 }
 
-/* ===== NAVBAR ===== */
+/* ===== NAV ===== */
 nav {
-  position: fixed;
-  top: 0;
-  width: 100%;
   display: flex;
   justify-content: space-between;
-  padding: 15px 30px;
-  backdrop-filter: blur(12px);
+  padding: 18px 25px;
+  position: fixed;
+  width: 100%;
+  backdrop-filter: blur(10px);
   background: rgba(0,0,0,0.25);
-  z-index: 10;
 }
 
 .logo {
   font-weight: bold;
+  font-size: 18px;
   letter-spacing: 1px;
 }
 
 .lang button {
   margin-left: 8px;
   padding: 8px 12px;
-  border-radius: 10px;
   border: none;
+  border-radius: 10px;
   cursor: pointer;
   background: rgba(255,255,255,0.12);
   color: white;
@@ -75,7 +74,7 @@ nav {
 }
 
 .lang button:hover {
-  transform: scale(1.08);
+  transform: scale(1.05);
   background: rgba(255,255,255,0.25);
 }
 
@@ -83,21 +82,20 @@ nav {
 .hero {
   text-align: center;
   padding-top: 140px;
-  padding-bottom: 80px;
+  padding-bottom: 50px;
 }
 
 .hero h1 {
-  font-size: 56px;
-  margin-bottom: 15px;
-  animation: fadeUp 1s ease forwards;
+  font-size: 54px;
 }
 
 .hero p {
+  margin-top: 12px;
   font-size: 18px;
   opacity: 0.85;
   max-width: 650px;
-  margin: auto;
-  animation: fadeUp 1.3s ease forwards;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* ===== BUTTONS ===== */
@@ -108,23 +106,21 @@ nav {
 .btn {
   display: inline-block;
   margin: 10px;
-  padding: 13px 20px;
-  border-radius: 14px;
+  padding: 12px 18px;
+  border-radius: 12px;
   text-decoration: none;
   color: white;
   background: rgba(255,255,255,0.12);
-  backdrop-filter: blur(10px);
   transition: 0.3s;
-  position: relative;
-  overflow: hidden;
+  backdrop-filter: blur(10px);
 }
 
 .btn:hover {
-  transform: translateY(-4px) scale(1.05);
-  background: rgba(255,255,255,0.22);
+  transform: translateY(-3px) scale(1.05);
+  background: rgba(255,255,255,0.25);
 }
 
-.glow {
+.primary {
   background: linear-gradient(90deg, #00ff9d, #00d4ff);
   color: black;
   font-weight: bold;
@@ -135,20 +131,17 @@ nav {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 15px;
-  padding: 50px 20px;
   max-width: 900px;
   margin: auto;
+  padding: 40px 20px;
 }
 
 .card {
-  padding: 20px;
-  border-radius: 16px;
+  padding: 18px;
+  border-radius: 15px;
   background: rgba(255,255,255,0.08);
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(10px);
   transition: 0.3s;
-  opacity: 0;
-  transform: translateY(20px);
-  animation: fadeUp 1s forwards;
 }
 
 .card:hover {
@@ -156,23 +149,9 @@ nav {
   background: rgba(255,255,255,0.15);
 }
 
-/* ===== ANIMATION ===== */
-@keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(25px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* ===== MOBILE ===== */
+/* MOBILE */
 @media (max-width: 700px) {
-  .hero h1 {
-    font-size: 38px;
-  }
+  .hero h1 { font-size: 38px; }
 }
 </style>
 </head>
@@ -184,7 +163,7 @@ nav {
 
 <!-- NAV -->
 <nav>
-  <div class="logo">PRO Project</div>
+  <div class="logo">ParadoxClient</div>
   <div class="lang">
     <button onclick="setLang('ua')">UA</button>
     <button onclick="setLang('en')">EN</button>
@@ -193,11 +172,11 @@ nav {
 
 <!-- HERO -->
 <section class="hero">
-  <h1 id="title"></h1>
-  <p id="text"></p>
+  <h1 id="title">ParadoxClient</h1>
+  <p id="text">Loading...</p>
 
   <div class="buttons">
-    <a class="btn glow" href="client.zip" download id="downloadBtn">Download</a>
+    <a class="btn primary" href="client.zip" download id="downloadBtn">Download Client</a>
     <a class="btn" href="https://t.me/kimp1ntyao666" target="_blank">Telegram</a>
     <a class="btn" href="https://discord.gg/6U5Z4V92y" target="_blank">Discord</a>
   </div>
@@ -213,4 +192,16 @@ nav {
 <script>
 const data = {
   ua: {
-    title: "PRO Сайт 🚀",
+    text: "ParadoxClient — сучасний клієнт з плавним інтерфейсом, швидкістю та стабільністю.",
+    download: "client.zip",
+    f1: "⚡ Висока продуктивність",
+    f2: "🎨 Сучасний інтерфейс",
+    f3: "🔒 Стабільна робота"
+  },
+  en: {
+    text: "ParadoxClient — modern client with smooth UI, speed and stability.",
+    download: "client.zip",
+    f1: "⚡ High performance",
+    f2: "🎨 Modern UI",
+    f3: "🔒 Stable system"
+  }
