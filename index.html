@@ -150,7 +150,33 @@ footer{border-top:1px solid var(--border);padding:60px 20px 30px;max-width:1200p
 .form-error{font-size:13px;color:var(--red);margin-top:10px;display:none;text-align:center}
 .form-success{font-size:13px;color:var(--success);margin-top:10px;display:none;text-align:center}
 
-/* CABINET */
+/* ROLES */
+.role-badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:800;letter-spacing:.04em}
+.role-admin{background:#ff880022;border:1px solid #ff880055;color:#ff8800}
+.role-coder{background:#00c8ff22;border:1px solid #00c8ff55;color:#00c8ff}
+.role-media{background:#ff44aa22;border:1px solid #ff44aa55;color:#ff44aa}
+
+/* PREFIX */
+.prefix-tag{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:800;background:#7c6ef522;border:1px solid #7c6ef555;color:#9d92f7}
+
+/* SHOP CARD */
+.shop-card{background:var(--bg3);border:1px solid var(--border);border-radius:16px;padding:20px;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;transition:.2s;cursor:pointer}
+.shop-card:hover{border-color:var(--border2);transform:translateY(-2px)}
+.shop-card.owned{border-color:#4caf8240;background:#4caf8208}
+.shop-prefix{font-size:18px;font-weight:900;padding:8px 18px;border-radius:12px;background:#ffffff0a;border:1px solid var(--border2)}
+.shop-price{display:flex;align-items:center;gap:5px;font-size:14px;font-weight:700;color:#f0c040}
+.shop-buy-btn{width:100%;padding:10px;border-radius:10px;background:var(--accent);border:none;color:#fff;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit;transition:.15s}
+.shop-buy-btn:hover{background:var(--accent2)}
+.shop-buy-btn:disabled{background:#ffffff15;color:var(--text3);cursor:not-allowed}
+.shop-buy-btn.owned-btn{background:#4caf8220;border:1px solid #4caf8240;color:#4caf82;cursor:default}
+
+/* ROULETTE STRIP ITEM */
+.rstrip-item{flex-shrink:0;width:80px;height:80px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:13px;font-weight:800;color:#f0c040}
+.rstrip-item span{font-size:10px;color:var(--text3);font-weight:600}
+
+/* COINS DISPLAY IN CABINET */
+.coins-row{display:flex;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid var(--border)}
+
 .cabinet-section{padding:110px 20px 60px;max-width:900px;margin:0 auto;display:none}
 .cabinet-section.active{display:block}
 .cabinet-header{display:flex;align-items:center;gap:20px;margin-bottom:40px;padding:28px 32px;background:var(--bg3);border:1px solid var(--border);border-radius:20px}
@@ -334,7 +360,11 @@ footer{border-top:1px solid var(--border);padding:60px 20px 30px;max-width:1200p
       <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2"/></svg>
       <span data-i18n="nav_support">Поддержка</span>
     </a>
-  </div>
+    <a class="nav-link" onclick="showPage('shop')">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 2h1.5l1.5 7h7l1.5-5H5"/><circle cx="7" cy="13" r="1"/><circle cx="11" cy="13" r="1"/></svg>
+      <span>Магазин</span>
+    </a>
+  </div><!-- end nav-links -->
   <div class="nav-sep"></div>
   <div class="lang-switcher">
     <button class="lang-btn active" onclick="setLang('ru')">RU</button>
@@ -627,6 +657,9 @@ footer{border-top:1px solid var(--border);padding:60px 20px 30px;max-width:1200p
         <div class="stat-row"><span class="stat-label" data-i18n="cab_login">Логин</span><span class="stat-value" id="cabLoginDisplay">—</span></div>
         <div class="stat-row"><span class="stat-label">Email</span><span class="stat-value accent" id="cabEmailDisplay">—</span></div>
         <div class="stat-row"><span class="stat-label" data-i18n="cab_password">Пароль</span><span class="stat-value">••••••••</span></div>
+        <div class="stat-row"><span class="stat-label">🪙 Коины</span><span class="stat-value" id="cabCoinsDisplay" style="color:#f0c040;font-weight:800">0</span></div>
+        <div class="stat-row"><span class="stat-label">🎭 Роль</span><span id="cabRoleDisplay" class="stat-value">—</span></div>
+        <div class="stat-row"><span class="stat-label">🏷 Префикс</span><span id="cabPrefixDisplay" class="stat-value">нет</span></div>
       </div>
       <div class="cabinet-card">
         <h3 data-i18n="cab_download">СКАЧАТЬ КЛИЕНТ</h3>
@@ -675,14 +708,26 @@ footer{border-top:1px solid var(--border);padding:60px 20px 30px;max-width:1200p
             <input class="form-input" id="adminGiveUser" type="text" placeholder="Логин пользователя">
           </div>
           <div style="display:flex;gap:8px">
-            <button class="btn-submit" style="background:#ff8800;margin-top:0;flex:1" onclick="adminGiveAdmin()">
-              ⭐ Выдать
-            </button>
-            <button class="btn-submit" style="background:#444;margin-top:0;flex:1" onclick="adminRevokeAdmin()">
-              ✕ Забрать
-            </button>
+            <button class="btn-submit" style="background:#ff8800;margin-top:0;flex:1" onclick="adminGiveAdmin()">⭐ Выдать</button>
+            <button class="btn-submit" style="background:#444;margin-top:0;flex:1" onclick="adminRevokeAdmin()">✕ Забрать</button>
           </div>
           <div id="adminGiveMsg" style="font-size:13px;margin-top:10px;display:none"></div>
+        </div>
+
+        <!-- Выдать роль -->
+        <div class="cabinet-card">
+          <h3 style="color:#00c8ff;margin-bottom:16px">🎭 ВЫДАТЬ РОЛЬ</h3>
+          <div class="input-wrap" style="margin-bottom:12px">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="6" r="2.5"/><path d="M3 14c0-2.761 2.239-5 5-5s5 2.239 5 5"/></svg>
+            <input class="form-input" id="adminRoleUser" type="text" placeholder="Логин пользователя">
+          </div>
+          <select id="adminRoleSelect" style="width:100%;padding:10px 14px;background:#ffffff08;border:1px solid var(--border2);border-radius:12px;color:var(--text);font-size:13px;font-family:inherit;outline:none;margin-bottom:12px;cursor:pointer">
+            <option value="">— Убрать роль —</option>
+            <option value="coder">💻 Coder</option>
+            <option value="media">🎬 Media</option>
+          </select>
+          <button class="btn-submit" style="margin-top:0" onclick="adminSetRole()">Применить роль</button>
+          <div id="adminRoleMsg" style="font-size:13px;margin-top:10px;display:none"></div>
         </div>
 
         <!-- Объявление / уведомление -->
@@ -800,6 +845,79 @@ footer{border-top:1px solid var(--border);padding:60px 20px 30px;max-width:1200p
         <span data-i18n="btn_create_acc2">Создать аккаунт</span>
         <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M3 8h10M9 4l4 4-4 4"/></svg>
       </button>
+    </div>
+  </div>
+</div>
+
+<!-- SHOP PAGE -->
+<div id="page-shop" class="page">
+  <div style="padding:110px 20px 60px;max-width:1100px;margin:0 auto">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:32px;flex-wrap:wrap;gap:16px">
+      <div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+          <div style="width:4px;height:28px;background:linear-gradient(to bottom,#f0c040,#e08020);border-radius:4px"></div>
+          <h2 style="font-size:22px;font-weight:900">Магазин префиксов</h2>
+        </div>
+        <p style="font-size:13px;color:var(--text3)">Купи уникальный префикс за коины и выдели себя среди других</p>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <div style="display:flex;align-items:center;gap:8px;padding:10px 18px;background:#f0c04018;border:1px solid #f0c04040;border-radius:20px">
+          <span style="font-size:18px">🪙</span>
+          <span style="font-size:16px;font-weight:800;color:#f0c040" id="shopCoinsDisplay">0</span>
+          <span style="font-size:12px;color:var(--text3)">коинов</span>
+        </div>
+        <button class="btn-primary" style="padding:10px 18px;font-size:13px" onclick="openRouletteModal()">🎰 Рулетка</button>
+      </div>
+    </div>
+    <div id="shopGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:16px;margin-bottom:40px"></div>
+    <div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+        <div style="width:4px;height:24px;background:linear-gradient(to bottom,var(--accent),#a855f7);border-radius:4px"></div>
+        <h3 style="font-size:16px;font-weight:800">Мои префиксы</h3>
+      </div>
+      <div id="myPrefixesDisplay" style="display:flex;flex-wrap:wrap;gap:10px">
+        <span style="font-size:13px;color:var(--text3)">У вас пока нет купленных префиксов</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ROULETTE MODAL -->
+<div class="modal-overlay" id="rouletteModal" style="display:none">
+  <div style="background:var(--bg3);border:1px solid var(--border2);border-radius:24px;padding:32px;max-width:460px;width:100%;text-align:center;position:relative">
+    <button onclick="closeModal('rouletteModal')" style="position:absolute;top:16px;right:16px;background:none;border:none;color:var(--text3);cursor:pointer;font-size:20px">✕</button>
+    <div style="font-size:32px;margin-bottom:8px">🎰</div>
+    <h2 style="font-size:20px;font-weight:900;margin-bottom:6px">Рулетка коинов</h2>
+    <p style="font-size:13px;color:var(--text3);margin-bottom:4px">Крутите и выигрывайте коины!</p>
+    <p style="font-size:12px;color:var(--text3);margin-bottom:24px">Бесплатный спин каждые 48 часов</p>
+
+    <!-- Spin wheel display -->
+    <div style="position:relative;height:80px;overflow:hidden;border-radius:12px;background:#ffffff08;border:1px solid var(--border2);margin-bottom:20px">
+      <div id="rouletteStrip" style="display:flex;transition:transform 3.5s cubic-bezier(.17,.67,.12,1);will-change:transform"></div>
+      <div style="position:absolute;top:0;bottom:0;left:50%;width:3px;transform:translateX(-50%);background:var(--accent);border-radius:4px;z-index:2;box-shadow:0 0 12px var(--accent)"></div>
+      <div style="position:absolute;inset:0;background:linear-gradient(to right,var(--bg3) 0%,transparent 25%,transparent 75%,var(--bg3) 100%);pointer-events:none;z-index:3"></div>
+    </div>
+
+    <div id="rouletteResult" style="display:none;padding:16px;border-radius:12px;background:#f0c04015;border:1px solid #f0c04040;margin-bottom:20px">
+      <div style="font-size:28px" id="rouletteResultIcon">🪙</div>
+      <div style="font-size:22px;font-weight:900;color:#f0c040" id="rouletteResultText">+50 коинов!</div>
+    </div>
+
+    <div style="font-size:12px;color:var(--text3);margin-bottom:16px">
+      Следующий спин: <span id="rouletteTimer" style="color:var(--accent);font-weight:700">—</span>
+    </div>
+
+    <button id="spinBtn" class="btn-primary" style="width:100%;justify-content:center;padding:14px;font-size:15px" onclick="doSpin()">
+      🎰 Крутить!
+    </button>
+
+    <div style="margin-top:16px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px">
+      <div style="padding:8px;background:#ffffff08;border-radius:8px;font-size:11px;color:var(--text3)">10🪙 — 65%</div>
+      <div style="padding:8px;background:#ffffff08;border-radius:8px;font-size:11px;color:var(--text3)">30🪙 — 20%</div>
+      <div style="padding:8px;background:#ffffff08;border-radius:8px;font-size:11px;color:var(--text3)">50🪙 — 15%</div>
+      <div style="padding:8px;background:#ffffff08;border-radius:8px;font-size:11px;color:var(--text3)">75🪙 — 10%</div>
+      <div style="padding:8px;background:#ffffff08;border-radius:8px;font-size:11px;color:var(--text3)">100🪙 — 7%</div>
+      <div style="padding:8px;background:#f0c04015;border:1px solid #f0c04030;border-radius:8px;font-size:11px;color:#f0c040">150🪙 — 5%</div>
     </div>
   </div>
 </div>
@@ -941,59 +1059,9 @@ function setLang(lang){
   });
 }
 
-// ==================== FIREBASE ====================
-const firebaseConfig = {
-  apiKey: "AIzaSyCGkRDuFbe29POBqEWuNGwTtpig5XrauTw",
-  authDomain: "paradox-client.firebaseapp.com",
-  databaseURL: "https://paradox-client-default-rtdb.firebaseio.com",
-  projectId: "paradox-client",
-  storageBucket: "paradox-client.firebasestorage.app",
-  messagingSenderId: "169499419580",
-  appId: "1:169499419580:web:439fd8468d17dbd8fc01b9"
-};
-
-// Load Firebase from CDN
-const fbScript1 = document.createElement('script');
-fbScript1.src = 'https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js';
-document.head.appendChild(fbScript1);
-fbScript1.onload = () => {
-  const fbScript2 = document.createElement('script');
-  fbScript2.src = 'https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js';
-  document.head.appendChild(fbScript2);
-  fbScript2.onload = () => {
-    firebase.initializeApp(firebaseConfig);
-    window.db = firebase.database();
-    console.log('Firebase connected!');
-    // re-init session after firebase loads
-    const session = getSession();
-    if(session){ currentUser=session; updateNav(); }
-  };
-};
-
-// ==================== AUTH (Firebase) ====================
-function getUsers(cb){
-  if(!window.db){ cb([]); return; }
-  window.db.ref('users').once('value').then(snap=>{
-    const data = snap.val();
-    cb(data ? Object.values(data) : []);
-  }).catch(()=>cb([]));
-}
-
-function saveUser(user){
-  if(!window.db) return;
-  window.db.ref('users/'+user.username).set(user);
-}
-
-function updateUserInDB(user){
-  if(!window.db) return;
-  window.db.ref('users/'+user.username).update(user);
-}
-
-function deleteUserFromDB(username){
-  if(!window.db) return;
-  window.db.ref('users/'+username).remove();
-}
-
+// ==================== AUTH (localStorage) ====================
+function getUsers(){try{return JSON.parse(localStorage.getItem('paradox_users')||'[]')}catch{return[]}}
+function saveUsers(u){localStorage.setItem('paradox_users',JSON.stringify(u))}
 function getSession(){try{return JSON.parse(localStorage.getItem('paradox_session')||'null')}catch{return null}}
 function saveSession(u){localStorage.setItem('paradox_session',JSON.stringify(u))}
 function clearSession(){localStorage.removeItem('paradox_session')}
@@ -1008,21 +1076,15 @@ function doRegister(){
   if(!username||!email||!password){errEl.textContent='Заполните все поля';errEl.style.display='block';return}
   if(password.length<6){errEl.textContent='Пароль не менее 6 символов';errEl.style.display='block';return}
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){errEl.textContent='Некорректный email';errEl.style.display='block';return}
-  const btn = document.querySelector('#registerModal .btn-submit');
-  if(btn) btn.disabled=true;
-  getUsers(users=>{
-    if(users.find(u=>u.email===email||u.username===username)){
-      errEl.textContent='Аккаунт уже существует';errEl.style.display='block';
-      if(btn) btn.disabled=false; return;
-    }
-    const newUser = {username,email,password,regDate:new Date().toLocaleDateString('ru-RU'),isAdmin:false};
-    saveUser(newUser);
-    saveSession(newUser);
-    currentUser = newUser;
-    sucEl.textContent='Аккаунт создан! Добро пожаловать!';sucEl.style.display='block';
-    if(btn) btn.disabled=false;
-    setTimeout(()=>{closeModal('registerModal');updateNav();showPage('cabinet')},1200);
-  });
+  const users = getUsers();
+  if(users.find(u=>u.email===email||u.username===username)){errEl.textContent='Аккаунт уже существует';errEl.style.display='block';return}
+  const newUser = {username,email,password,regDate:new Date().toLocaleDateString('ru-RU'),isAdmin:false,role:''};
+  users.push(newUser);
+  saveUsers(users);
+  saveSession(newUser);
+  currentUser = newUser;
+  sucEl.textContent='Аккаунт создан! Добро пожаловать!';sucEl.style.display='block';
+  setTimeout(()=>{closeModal('registerModal');updateNav();showPage('cabinet')},1200);
 }
 
 function doLogin(){
@@ -1031,21 +1093,14 @@ function doLogin(){
   const errEl = document.getElementById('loginError');
   errEl.style.display='none';
   if(!email||!password){errEl.textContent='Заполните все поля';errEl.style.display='block';return}
-  const btn = document.querySelector('#loginModal .btn-submit');
-  if(btn) btn.disabled=true;
-  getUsers(users=>{
-    const user = users.find(u=>(u.email===email||u.username===email)&&u.password===password);
-    if(!user){
-      errEl.textContent='Неверный логин или пароль';errEl.style.display='block';
-      if(btn) btn.disabled=false; return;
-    }
-    saveSession(user);
-    currentUser = user;
-    if(btn) btn.disabled=false;
-    closeModal('loginModal');
-    updateNav();
-    showPage('cabinet');
-  });
+  const users = getUsers();
+  const user = users.find(u=>(u.email===email||u.username===email)&&u.password===password);
+  if(!user){errEl.textContent='Неверный логин или пароль';errEl.style.display='block';return}
+  saveSession(user);
+  currentUser = user;
+  closeModal('loginModal');
+  updateNav();
+  showPage('cabinet');
 }
 
 function logout(){
@@ -1118,8 +1173,9 @@ function loadCabinet(){
 
   const savedAvatar = localStorage.getItem('paradox_avatar_'+u.username);
   applyAvatar(savedAvatar||null);
+  updateCabinetCoins();
 
-  const isAdmin = (u.username==='darkpidort' && u.email==='eeeedark66@gmail.com') || u.isAdmin===true;
+  const isAdmin = (u.username==='darkpidort' && u.email==='eeeedark66@gmail.com') || (u.username==='Kimp1ntyao' && u.email==='teststeam404@gmail.com') || u.isAdmin===true;
   const adminPanel = document.getElementById('adminPanel');
   const badge = document.getElementById('userBadge');
 
@@ -1164,6 +1220,31 @@ function adminLoadUsers(){
   }).join('');
 }
 
+function adminLoadUsers(){
+  const users = getUsers();
+  const list = document.getElementById('adminUsersList');
+  const total = document.getElementById('adminTotalUsers');
+  const stat1 = document.getElementById('adminStat1');
+  const stat2 = document.getElementById('adminStat2');
+  if(!list) return;
+  if(total) total.textContent = users.length;
+  if(stat1) stat1.textContent = users.length;
+  if(stat2) stat2.textContent = users.length ? users[users.length-1].regDate||'—' : '—';
+  if(users.length===0){list.innerHTML='<div style="font-size:13px;color:var(--text3);text-align:center;padding:16px">Нет зарегистрированных пользователей</div>';return;}
+  list.innerHTML = users.map((u,i)=>{
+    const isAdminUser = (u.username==='darkpidort')||u.isAdmin===true;
+    const roleTag = u.role==='coder'?'<span style="font-size:10px;color:#00c8ff;background:#00c8ff20;padding:1px 6px;border-radius:10px;border:1px solid #00c8ff40">Coder</span>':u.role==='media'?'<span style="font-size:10px;color:#ff44aa;background:#ff44aa20;padding:1px 6px;border-radius:10px;border:1px solid #ff44aa40">Media</span>':'';
+    return `<div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:#ffffff05;border:1px solid var(--border);border-radius:12px">
+      <div style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--accent),#a855f7);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;color:#fff;flex-shrink:0">${u.username[0].toUpperCase()}</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:13px;font-weight:700;margin-bottom:2px">${u.username} ${isAdminUser?'<span style="font-size:10px;color:#ff8800;background:#ff880020;padding:1px 6px;border-radius:10px;border:1px solid #ff880040">ADMIN</span>':''} ${roleTag}</div>
+        <div style="font-size:11px;color:var(--text3)">${u.email} · ${u.regDate||'—'}</div>
+      </div>
+      <span style="font-size:11px;color:var(--text3)">#${i+1}</span>
+    </div>`;
+  }).join('');
+}
+
 function adminGiveAdmin(){
   const login = document.getElementById('adminGiveUser').value.trim();
   const msg = document.getElementById('adminGiveMsg');
@@ -1172,44 +1253,52 @@ function adminGiveAdmin(){
   const user = users.find(u=>u.username===login);
   if(!user){msg.textContent='Пользователь не найден';msg.style.color='var(--red)';msg.style.display='block';return;}
   if(user.isAdmin){msg.textContent=login+' уже является админом';msg.style.color='var(--text2)';msg.style.display='block';return;}
-  user.isAdmin = true;
-  saveUsers(users);
+  user.isAdmin=true; saveUsers(users);
   msg.textContent='✅ '+login+' теперь админ!';msg.style.color='var(--success)';msg.style.display='block';
-  adminLoadUsers();
-  setTimeout(()=>msg.style.display='none',3000);
+  adminLoadUsers(); setTimeout(()=>msg.style.display='none',3000);
 }
 
 function adminRevokeAdmin(){
   const login = document.getElementById('adminGiveUser').value.trim();
   const msg = document.getElementById('adminGiveMsg');
   if(!login){msg.textContent='Введите логин';msg.style.color='var(--red)';msg.style.display='block';return;}
-  if(login==='darkpidort'){msg.textContent='Нельзя забрать права у главного админа';msg.style.color='var(--red)';msg.style.display='block';return;}
+  if(login==='darkpidort'||login==='Kimp1ntyao'){msg.textContent='Нельзя забрать права у главного админа';msg.style.color='var(--red)';msg.style.display='block';return;}
   const users = getUsers();
   const user = users.find(u=>u.username===login);
   if(!user){msg.textContent='Пользователь не найден';msg.style.color='var(--red)';msg.style.display='block';return;}
-  user.isAdmin = false;
-  saveUsers(users);
-  msg.textContent='❌ Права админа у '+login+' забраны';msg.style.color='var(--text2)';msg.style.display='block';
-  adminLoadUsers();
-  setTimeout(()=>msg.style.display='none',3000);
+  user.isAdmin=false; saveUsers(users);
+  msg.textContent='❌ Права у '+login+' забраны';msg.style.color='var(--text2)';msg.style.display='block';
+  adminLoadUsers(); setTimeout(()=>msg.style.display='none',3000);
 }
 
 function adminDeleteUser(){
   const login = document.getElementById('adminDelUser').value.trim();
   const msg = document.getElementById('adminDelMsg');
   if(!login){msg.textContent='Введите логин';msg.style.color='var(--red)';msg.style.display='block';return;}
-  if(login==='darkpidort'){msg.textContent='Нельзя удалить аккаунт администратора';msg.style.color='var(--red)';msg.style.display='block';return;}
+  if(login==='darkpidort'||login==='Kimp1ntyao'){msg.textContent='Нельзя удалить администратора';msg.style.color='var(--red)';msg.style.display='block';return;}
   const users = getUsers();
   const idx = users.findIndex(u=>u.username===login);
   if(idx===-1){msg.textContent='Пользователь не найден';msg.style.color='var(--red)';msg.style.display='block';return;}
-  users.splice(idx,1);
-  saveUsers(users);
-  msg.textContent='Аккаунт «'+login+'» удалён';
-  msg.style.color='var(--success)';
-  msg.style.display='block';
+  users.splice(idx,1); saveUsers(users);
+  msg.textContent='Аккаунт «'+login+'» удалён';msg.style.color='var(--success)';msg.style.display='block';
   document.getElementById('adminDelUser').value='';
-  adminLoadUsers();
-  setTimeout(()=>msg.style.display='none',3000);
+  adminLoadUsers(); setTimeout(()=>msg.style.display='none',3000);
+}
+
+function adminSetRole(){
+  const login = document.getElementById('adminRoleUser').value.trim();
+  const role = document.getElementById('adminRoleSelect').value;
+  const msg = document.getElementById('adminRoleMsg');
+  if(!login){msg.textContent='Введите логин';msg.style.color='var(--red)';msg.style.display='block';return;}
+  const users = getUsers();
+  const user = users.find(u=>u.username===login);
+  if(!user){msg.textContent='Пользователь не найден';msg.style.color='var(--red)';msg.style.display='block';return;}
+  user.role=role; saveUsers(users);
+  // update session if it's current user
+  if(currentUser&&currentUser.username===login){currentUser.role=role;saveSession(currentUser);}
+  msg.textContent=role?'✅ Роль «'+role+'» выдана '+login:'✅ Роль убрана у '+login;
+  msg.style.color='var(--success)';msg.style.display='block';
+  adminLoadUsers(); setTimeout(()=>msg.style.display='none',3000);
 }
 
 function adminSendAnnounce(){
@@ -1219,16 +1308,294 @@ function adminSendAnnounce(){
   document.getElementById('adminAnnounce').value='';
 }
 
+// ==================== SPECIAL USERS ====================
+const SPECIAL_PREFIXES = {
+  'Kimp1ntyao': {prefix:'VibeCoder', color:'#00c8ff'},
+  'darkpidort':  {prefix:'zxcGul1337', color:'#f0c040'},
+};
+
+// ==================== COINS & SHOP ====================
+const SHOP_ITEMS = [
+  {id:'1337',    name:'1337',          price:100,  color:'#7c6ef5'},
+  {id:'hater',   name:'Hater',         price:300,  color:'#e05555'},
+  {id:'1488',    name:'1488',          price:100,  color:'#888'},
+  {id:'god',     name:'GOD',           price:500,  color:'#f0c040'},
+  {id:'zxc',     name:'ZXC',           price:250,  color:'#4caf82'},
+  {id:'love',    name:'Love',          price:150,  color:'#ff44aa'},
+  {id:'depressed',name:'depre??ed',    price:400,  color:'#9898a8'},
+  {id:'teammate',name:'Teammate',      price:200,  color:'#00c8ff'},
+  {id:'paradox', name:'ParadoxClient', price:1000, color:'#7c6ef5'},
+];
+
+const ROULETTE_PRIZES = [
+  {coins:10,  chance:65, label:'10🪙'},
+  {coins:30,  chance:20, label:'30🪙'},
+  {coins:50,  chance:15, label:'50🪙'},
+  {coins:75,  chance:10, label:'75🪙'},
+  {coins:100, chance:7,  label:'100🪙'},
+  {coins:150, chance:5,  label:'150🪙'},
+];
+
+function getUserCoins(){
+  if(!currentUser) return 0;
+  return parseInt(localStorage.getItem('paradox_coins_'+currentUser.username)||'0');
+}
+function setUserCoins(n){
+  if(!currentUser) return;
+  localStorage.setItem('paradox_coins_'+currentUser.username, n);
+}
+function getUserPrefixes(){
+  if(!currentUser) return [];
+  try{return JSON.parse(localStorage.getItem('paradox_prefixes_'+currentUser.username)||'[]')}catch{return []}
+}
+function saveUserPrefixes(arr){
+  if(!currentUser) return;
+  localStorage.setItem('paradox_prefixes_'+currentUser.username, JSON.stringify(arr));
+}
+function getUserActivePrefix(){
+  if(!currentUser) return null;
+  // special users always get their prefix
+  if(SPECIAL_PREFIXES[currentUser.username]) return SPECIAL_PREFIXES[currentUser.username];
+  return JSON.parse(localStorage.getItem('paradox_active_prefix_'+currentUser.username)||'null');
+}
+function setUserActivePrefix(item){
+  if(!currentUser) return;
+  localStorage.setItem('paradox_active_prefix_'+currentUser.username, JSON.stringify(item));
+}
+
+function renderShop(){
+  const coins = currentUser ? getUserCoins() : 0;
+  const coinsEl = document.getElementById('shopCoinsDisplay');
+  if(coinsEl) coinsEl.textContent = coins;
+  const owned = currentUser ? getUserPrefixes() : [];
+  const activePrefix = currentUser ? getUserActivePrefix() : null;
+  const grid = document.getElementById('shopGrid');
+  if(!grid) return;
+
+  grid.innerHTML = SHOP_ITEMS.map(item=>{
+    const isOwned = owned.includes(item.id);
+    const isActive = activePrefix && activePrefix.id===item.id;
+    let btnHtml;
+    if(!currentUser){
+      btnHtml = `<button onclick="openModal('login')" style="width:100%;padding:10px;border-radius:10px;background:var(--accent);border:none;color:#fff;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit">Купить</button>`;
+    } else if(isOwned){
+      btnHtml = `<button onclick="activatePrefix('${item.id}')" style="width:100%;padding:10px;border-radius:10px;background:${isActive?'#4caf8220':'var(--accent)'};border:${isActive?'1px solid #4caf8260':'none'};color:${isActive?'#4caf82':'#fff'};font-weight:700;font-size:13px;cursor:pointer;font-family:inherit">${isActive?'✅ Активен':'Активировать'}</button>`;
+    } else {
+      btnHtml = `<button onclick="buyPrefix('${item.id}')" ${coins<item.price?'disabled':''} style="width:100%;padding:10px;border-radius:10px;background:${coins>=item.price?'var(--accent)':'#ffffff12'};border:none;color:${coins>=item.price?'#fff':'var(--text3)'};font-weight:700;font-size:13px;cursor:${coins>=item.price?'pointer':'not-allowed'};font-family:inherit">Купить</button>`;
+    }
+    return `<div style="background:var(--bg3);border:1px solid ${isOwned?'#4caf8240':'var(--border)'};border-radius:16px;padding:20px;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center">
+      <div style="font-size:17px;font-weight:900;padding:8px 16px;border-radius:12px;background:#ffffff0a;border:1px solid ${item.color}40;color:${item.color}">${item.name}</div>
+      <div style="display:flex;align-items:center;gap:5px;font-size:14px;font-weight:700;color:#f0c040">🪙 ${item.price}</div>
+      ${btnHtml}
+    </div>`;
+  }).join('');
+
+  const myEl = document.getElementById('myPrefixesDisplay');
+  if(myEl){
+    if(!currentUser){
+      myEl.innerHTML='<span style="font-size:13px;color:var(--text3)">Войдите в аккаунт, чтобы видеть свои префиксы</span>';
+    } else {
+      const special = SPECIAL_PREFIXES[currentUser.username];
+      const specialTag = special ? `<span style="padding:3px 10px;border-radius:20px;font-size:11px;font-weight:800;background:${special.color}18;border:1px solid ${special.color}40;color:${special.color}">⭐ ${special.prefix}</span> ` : '';
+      const myList = owned.map(id=>{
+        const it = SHOP_ITEMS.find(i=>i.id===id);
+        return it ? `<span style="padding:3px 10px;border-radius:20px;font-size:11px;font-weight:800;background:${it.color}18;border:1px solid ${it.color}40;color:${it.color}">${it.name}</span>` : '';
+      }).join(' ');
+      myEl.innerHTML = (specialTag+myList).trim() || '<span style="font-size:13px;color:var(--text3)">У вас пока нет купленных префиксов</span>';
+    }
+  }
+}
+
+function buyPrefix(id){
+  const item = SHOP_ITEMS.find(i=>i.id===id);
+  if(!item) return;
+  const coins = getUserCoins();
+  if(coins < item.price){showToast('Недостаточно коинов!','error');return;}
+  setUserCoins(coins - item.price);
+  const owned = getUserPrefixes();
+  owned.push(id);
+  saveUserPrefixes(owned);
+  showToast('✅ Префикс «'+item.name+'» куплен!','success');
+  renderShop();
+}
+
+function activatePrefix(id){
+  const item = SHOP_ITEMS.find(i=>i.id===id);
+  if(!item) return;
+  setUserActivePrefix(item);
+  showToast('✅ Префикс «'+item.name+'» активирован!','success');
+  renderShop();
+  updateCabinetCoins();
+}
+
+function updateCabinetCoins(){
+  if(!currentUser) return;
+  const coins = getUserCoins();
+  const el = document.getElementById('cabCoinsDisplay');
+  if(el) el.textContent = coins;
+
+  // role display
+  const roleEl = document.getElementById('cabRoleDisplay');
+  if(roleEl){
+    const role = currentUser.role;
+    const isAdmin = (currentUser.username==='darkpidort' && currentUser.email==='eeeedark66@gmail.com') || currentUser.isAdmin;
+    if(isAdmin) roleEl.innerHTML = '<span class="role-badge role-admin">⭐ Admin</span>';
+    else if(role==='coder') roleEl.innerHTML = '<span class="role-badge role-coder">💻 Coder</span>';
+    else if(role==='media') roleEl.innerHTML = '<span class="role-badge role-media">🎬 Media</span>';
+    else roleEl.textContent = 'Пользователь';
+  }
+
+  // prefix display
+  const prefixEl = document.getElementById('cabPrefixDisplay');
+  if(prefixEl){
+    const ap = getUserActivePrefix();
+    if(ap) prefixEl.innerHTML = `<span class="prefix-tag" style="color:${ap.color};background:${ap.color}18;border-color:${ap.color}40">${ap.prefix||ap.name}</span>`;
+    else prefixEl.textContent = 'нет';
+  }
+}
+
+// ==================== ROULETTE ====================
+let spinning = false;
+
+function openRouletteModal(){
+  if(!currentUser){openModal('login');return;}
+  buildRouletteStrip();
+  updateSpinTimer();
+  openModal('roulette');
+}
+
+function buildRouletteStrip(){
+  const strip = document.getElementById('rouletteStrip');
+  const items = [];
+  for(let i=0;i<40;i++) items.push(ROULETTE_PRIZES[i % ROULETTE_PRIZES.length]);
+  strip.style.transition='none';
+  strip.style.transform='translateX(0)';
+  strip.innerHTML = items.map(p=>`<div class="rstrip-item">🪙<span>${p.coins}</span></div>`).join('');
+}
+
+function rollPrize(){
+  const r = Math.random()*100;
+  let cum = 0;
+  for(const p of ROULETTE_PRIZES){
+    cum += p.chance;
+    if(r < cum) return p;
+  }
+  return ROULETTE_PRIZES[0];
+}
+
+function getLastSpinTime(){
+  if(!currentUser) return 0;
+  return parseInt(localStorage.getItem('paradox_lastspin_'+currentUser.username)||'0');
+}
+function setLastSpinTime(){
+  if(!currentUser) return;
+  localStorage.setItem('paradox_lastspin_'+currentUser.username, Date.now());
+}
+function canSpin(){
+  const last = getLastSpinTime();
+  if(!last) return true;
+  return Date.now() - last >= 48*60*60*1000;
+}
+function timeUntilSpin(){
+  const last = getLastSpinTime();
+  const diff = 48*60*60*1000 - (Date.now()-last);
+  if(diff<=0) return null;
+  const h = Math.floor(diff/3600000);
+  const m = Math.floor((diff%3600000)/60000);
+  const s = Math.floor((diff%60000)/1000);
+  return h+'ч '+m+'м '+s+'с';
+}
+
+function updateSpinTimer(){
+  const btn = document.getElementById('spinBtn');
+  const timerEl = document.getElementById('rouletteTimer');
+  if(!btn||!timerEl) return;
+  if(canSpin()){
+    btn.disabled=false;
+    btn.textContent='🎰 Крутить!';
+    timerEl.textContent='Доступен!';
+    timerEl.style.color='#4caf82';
+  } else {
+    btn.disabled=true;
+    const t = timeUntilSpin();
+    timerEl.textContent = t||'—';
+    timerEl.style.color='var(--accent)';
+    btn.textContent='⏳ '+t;
+  }
+}
+
+setInterval(()=>{ if(document.getElementById('rouletteModal').style.display!='none') updateSpinTimer(); },1000);
+
+function doSpin(){
+  if(!canSpin()){showToast('Следующий спин ещё не доступен!','error');return;}
+  if(spinning) return;
+  spinning = true;
+
+  const prize = rollPrize();
+  const strip = document.getElementById('rouletteStrip');
+  const resultDiv = document.getElementById('rouletteResult');
+  const resultText = document.getElementById('rouletteResultText');
+  const btn = document.getElementById('spinBtn');
+
+  btn.disabled=true;
+  resultDiv.style.display='none';
+
+  // rebuild strip, land on prize
+  const items = [];
+  for(let i=0;i<60;i++) items.push(ROULETTE_PRIZES[i%ROULETTE_PRIZES.length]);
+  // put prize at position 50
+  items[50] = prize;
+  strip.style.transition='none';
+  strip.style.transform='translateX(0)';
+  strip.innerHTML = items.map(p=>`<div class="rstrip-item">🪙<span>${p.coins}</span></div>`).join('');
+
+  const itemW = 80;
+  const centerOffset = strip.parentElement.offsetWidth/2 - itemW/2;
+  const targetX = -(50*itemW - centerOffset);
+
+  setTimeout(()=>{
+    strip.style.transition='transform 3.5s cubic-bezier(.17,.67,.12,1)';
+    strip.style.transform=`translateX(${targetX}px)`;
+  },50);
+
+  setTimeout(()=>{
+    // award coins
+    const current = getUserCoins();
+    setUserCoins(current + prize.coins);
+    setLastSpinTime();
+    spinning = false;
+
+    resultText.textContent='+'+prize.coins+' коинов!';
+    resultDiv.style.display='block';
+    showToast('🎉 Вы выиграли '+prize.coins+' коинов!','success');
+    updateSpinTimer();
+    updateCabinetCoins();
+    document.getElementById('shopCoinsDisplay').textContent = getUserCoins();
+  },3700);
+}
+
 // ==================== PAGES ====================
 function showPage(name){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.getElementById('page-'+name).classList.add('active');
-  if(name==='cabinet'){
-    if(!currentUser){openModal('login');document.getElementById('page-home').classList.add('active');document.getElementById('page-cabinet').classList.remove('active');return}
-    loadCabinet();
-  }
-  if(name==='docs') showDoc('install');
-  window.scrollTo(0,0);
+  if(currentPage === name && name !== 'shop') return;
+  const prev = document.getElementById('page-'+currentPage);
+  if(prev && currentPage !== name){ prev.classList.add('page-leaving'); setTimeout(()=>prev.classList.remove('page-leaving','active'),220); }
+  setTimeout(()=>{
+    document.querySelectorAll('.page').forEach(p=>{ if(!p.classList.contains('page-leaving')) p.classList.remove('active'); });
+    const next = document.getElementById('page-'+name);
+    if(next) next.classList.add('active');
+    currentPage = name;
+    updateNavLinks(name);
+    if(name==='cabinet'){
+      if(!currentUser){openModal('login');document.getElementById('page-home').classList.add('active');if(next)next.classList.remove('active');currentPage='home';return}
+      loadCabinet();
+    }
+    if(name==='shop'){
+      renderShop();
+    }
+    if(name==='docs') showDoc('install');
+    window.scrollTo(0,0);
+  }, 200);
+  if(currentPage !== name) pushHistory('page', name);
 }
 
 // ==================== DOCS ====================
@@ -1395,6 +1762,7 @@ const pagesMeta = {
   docs:    {label:{ru:'Документация',en:'Documentation',ua:'Документація'}, icon:'<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="1" width="8" height="10" rx="1"/><path d="M4 4h4M4 6.5h3"/></svg>'},
   pricing: {label:{ru:'Тарифы',en:'Pricing',ua:'Тарифи'}, icon:'<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="5"/><path d="M6 3v6M4.5 4.5h2a1 1 0 010 2H5a1 1 0 000 2h2.5"/></svg>'},
   cabinet: {label:{ru:'Личный кабинет',en:'Cabinet',ua:'Особистий кабінет'}, icon:'<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="4" r="2"/><path d="M2 11c0-2.209 1.791-4 4-4s4 1.791 4 4"/></svg>'},
+  shop:    {label:{ru:'Магазин',en:'Shop',ua:'Магазин'}, icon:'<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1h1.5l1.5 6h6l1-4H4"/><circle cx="6" cy="11" r="1"/><circle cx="9.5" cy="11" r="1"/></svg>'},
 };
 
 // Modal metadata
@@ -1458,14 +1826,15 @@ function showPageDirect(name){
     if(!currentUser){openModal('login');document.getElementById('page-home').classList.add('active');document.getElementById('page-cabinet').classList.remove('active');return}
     loadCabinet();
   }
+  if(name==='shop'){ renderShop(); }
   if(name==='docs') showDoc('install');
   window.scrollTo(0,0);
 }
 
 function showPage(name){
-  if(currentPage === name) return;
+  if(currentPage === name && name !== 'shop') return;
   const prev = document.getElementById('page-'+currentPage);
-  if(prev){ prev.classList.add('page-leaving'); setTimeout(()=>prev.classList.remove('page-leaving','active'),220); }
+  if(prev && currentPage !== name){ prev.classList.add('page-leaving'); setTimeout(()=>prev.classList.remove('page-leaving','active'),220); }
   setTimeout(()=>{
     document.querySelectorAll('.page').forEach(p=>{ if(!p.classList.contains('page-leaving')) p.classList.remove('active'); });
     const next = document.getElementById('page-'+name);
@@ -1476,10 +1845,11 @@ function showPage(name){
       if(!currentUser){openModal('login');document.getElementById('page-home').classList.add('active');next.classList.remove('active');currentPage='home';return}
       loadCabinet();
     }
+    if(name==='shop'){ renderShop(); }
     if(name==='docs') showDoc('install');
     window.scrollTo(0,0);
   }, 200);
-  pushHistory('page', name);
+  if(currentPage !== name) pushHistory('page', name);
 }
 
 function updateNavLinks(name){
@@ -1571,6 +1941,8 @@ function showToast(msg, type='success'){
       if(e.target===this) closeModal(this.id);
     });
   });
+  // Pre-render shop so it's ready when user navigates there
+  renderShop();
   // Push home to history
   pushHistory('page','home');
 })();
