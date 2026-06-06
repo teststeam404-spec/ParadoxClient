@@ -13,7 +13,7 @@ body {
   overflow-x: hidden;
 }
 
-/* background */
+/* BACKGROUND */
 .bg {
   position: fixed;
   inset: 0;
@@ -37,7 +37,7 @@ body {
   z-index: -1;
 }
 
-/* layout */
+/* LAYOUT */
 .container {
   text-align: center;
   padding-top: 120px;
@@ -53,7 +53,7 @@ p {
   opacity: 0.85;
 }
 
-/* buttons */
+/* BUTTONS */
 .btn {
   display: inline-block;
   margin: 10px;
@@ -76,7 +76,7 @@ p {
   font-weight: bold;
 }
 
-/* features */
+/* FEATURES */
 .features {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
@@ -102,8 +102,10 @@ p {
   <h1>ParadoxClient</h1>
   <p id="text"></p>
 
-  <!-- REAL DOWNLOAD FIX -->
-  <button class="btn download" onclick="downloadFile()">Download Client</button>
+  <!-- FIXED DOWNLOAD -->
+  <button class="btn download" onclick="downloadFile()">
+    Download Client
+  </button>
 
   <div>
     <button class="btn" onclick="setLang('ua')">UA</button>
@@ -126,14 +128,14 @@ p {
 <script>
 const data = {
   ua: {
-    text: "ParadoxClient — швидкий, оптимізований і красивий клієнт.",
+    text: "ParadoxClient — оптимізований клієнт з високою швидкістю та стабільністю.",
     f1: "⚡ Optimization",
     f2: "🚀 Fast work",
     f3: "🎨 Good visuals",
     f4: "🧠 Best performance"
   },
   en: {
-    text: "ParadoxClient — fast, optimized and visually clean client.",
+    text: "ParadoxClient — optimized client with speed and stability.",
     f1: "⚡ Optimization",
     f2: "🚀 Fast work",
     f3: "🎨 Good visuals",
@@ -143,21 +145,38 @@ const data = {
 
 function setLang(l) {
   document.getElementById("text").innerText = data[l].text;
-
   document.getElementById("f1").innerText = data[l].f1;
   document.getElementById("f2").innerText = data[l].f2;
   document.getElementById("f3").innerText = data[l].f3;
   document.getElementById("f4").innerText = data[l].f4;
 }
 
-/* REAL DOWNLOAD (100% WORKS) */
+/* ✅ FIXED GITHUB DOWNLOAD */
 function downloadFile() {
-  const a = document.createElement("a");
-  a.href = "client.zip"; // поклади файл в ту ж папку
-  a.download = "client.zip";
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
+  const url = "./ParadoxClient Beta 2.5.zip";
+
+  fetch(url)
+    .then(r => {
+      if (!r.ok) throw new Error("File not found");
+      return r.blob();
+    })
+    .then(blob => {
+      const blobUrl = URL.createObjectURL(blob);
+
+      const a = document.createElement("a");
+      a.href = blobUrl;
+      a.download = "ParadoxClient.zip";
+
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+
+      URL.revokeObjectURL(blobUrl);
+    })
+    .catch(err => {
+      alert("❌ Файл не знайдено. Перевір назву: ParadoxClient Beta 2.5.zip");
+      console.log(err);
+    });
 }
 
 window.onload = () => setLang("ua");
