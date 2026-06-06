@@ -2,36 +2,35 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Language Site</title>
+<title>My Client</title>
+
 <style>
-/* ====== BACKGROUND (shader style) ====== */
 body {
   margin: 0;
   font-family: Arial, sans-serif;
   color: white;
-  overflow: hidden;
   height: 100vh;
+  overflow: hidden;
 }
 
-/* animated “Minecraft shader-like” background */
+/* shader-like background */
 .bg {
   position: fixed;
   width: 200%;
   height: 200%;
-  background: radial-gradient(circle at 20% 20%, #4f9cff, transparent 40%),
-              radial-gradient(circle at 80% 30%, #7a5cff, transparent 45%),
-              radial-gradient(circle at 50% 80%, #00ffc8, transparent 40%),
-              radial-gradient(circle at 30% 60%, #ff3df2, transparent 50%);
-  filter: blur(60px);
-  animation: moveBg 12s infinite alternate ease-in-out;
+  background: radial-gradient(circle at 20% 20%, #6a5cff, transparent 40%),
+              radial-gradient(circle at 80% 30%, #00d4ff, transparent 45%),
+              radial-gradient(circle at 50% 80%, #ff4fd8, transparent 45%),
+              radial-gradient(circle at 30% 60%, #00ff9d, transparent 50%);
+  filter: blur(70px);
+  animation: move 10s infinite alternate ease-in-out;
 }
 
-@keyframes moveBg {
+@keyframes move {
   0% { transform: translate(-10%, -10%) scale(1); }
   100% { transform: translate(-20%, -20%) scale(1.2); }
 }
 
-/* dark overlay */
 .overlay {
   position: fixed;
   width: 100%;
@@ -39,40 +38,46 @@ body {
   background: rgba(0,0,0,0.55);
 }
 
-/* ====== UI ====== */
 .container {
   position: relative;
   z-index: 2;
   text-align: center;
-  top: 30%;
+  top: 25%;
 }
 
 h1 {
-  font-size: 40px;
-  margin-bottom: 10px;
+  font-size: 45px;
 }
 
 p {
+  opacity: 0.85;
   font-size: 18px;
-  opacity: 0.9;
 }
 
-button {
-  padding: 10px 18px;
-  margin: 5px;
+.btn {
+  display: inline-block;
+  margin: 10px;
+  padding: 12px 18px;
+  border-radius: 12px;
   border: none;
-  border-radius: 10px;
   cursor: pointer;
-  font-size: 14px;
-  background: rgba(255,255,255,0.15);
+  font-size: 15px;
   color: white;
+  background: rgba(255,255,255,0.12);
   backdrop-filter: blur(10px);
   transition: 0.3s;
+  text-decoration: none;
 }
 
-button:hover {
-  background: rgba(255,255,255,0.3);
-  transform: scale(1.05);
+.btn:hover {
+  transform: scale(1.08);
+  background: rgba(255,255,255,0.25);
+}
+
+.download {
+  background: linear-gradient(90deg, #00ff9d, #00d4ff);
+  color: black;
+  font-weight: bold;
 }
 </style>
 </head>
@@ -83,24 +88,28 @@ button:hover {
 <div class="overlay"></div>
 
 <div class="container">
-  <div>
-    <button onclick="setLang('ua')">Українська</button>
-    <button onclick="setLang('en')">English</button>
-  </div>
-
   <h1 id="title"></h1>
   <p id="text"></p>
+
+  <a class="btn download" href="client.exe" download>
+    Download Client
+  </a>
+
+  <div>
+    <a class="btn" href="https://t.me/kimp1ntyao666" target="_blank">Telegram</a>
+    <a class="btn" href="https://discord.gg/6U5Z4V92y" target="_blank">Discord</a>
+  </div>
 </div>
 
 <script>
 const lang = {
   ua: {
-    title: "Привіт 👋",
-    text: "Це сайт з перемиканням мов і красивим фоном як shader ефект."
+    title: "Мій Client 🚀",
+    text: "Завантаж клієнт та приєднуйся до спільноти."
   },
   en: {
-    title: "Hello 👋",
-    text: "This is a website with language switch and a shader-like animated background."
+    title: "My Client 🚀",
+    text: "Download the client and join the community."
   }
 };
 
