@@ -6,67 +6,207 @@
 <title>ParadoxClient</title>
 
 <style>
-body{
+*{
     margin:0;
-    font-family:Arial,sans-serif;
-    background:#0f0f0f;
-    color:white;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Segoe UI,sans-serif;
 }
 
-nav{
-    background:#161616;
-    padding:15px;
-    text-align:center;
+body{
+    background:#0b0b12;
+    color:white;
+    overflow-x:hidden;
+}
+
+.bg{
+    position:fixed;
+    width:100%;
+    height:100%;
+    background:
+    radial-gradient(circle at 20% 20%, #7b2cff55 0%, transparent 30%),
+    radial-gradient(circle at 80% 30%, #9d4dff44 0%, transparent 30%),
+    radial-gradient(circle at 50% 80%, #5f00ff44 0%, transparent 30%);
+    animation:moveBg 8s infinite alternate;
+    z-index:-1;
+}
+
+@keyframes moveBg{
+    from{transform:scale(1);}
+    to{transform:scale(1.1);}
+}
+
+header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:20px 8%;
+    backdrop-filter:blur(10px);
+}
+
+.logo{
+    font-size:28px;
+    font-weight:bold;
+    color:#a855ff;
 }
 
 nav a{
     color:white;
     text-decoration:none;
-    margin:0 15px;
-    font-size:18px;
+    margin-left:20px;
 }
 
-section{
-    padding:60px 20px;
+.lang-btn{
+    background:#7b2cff;
+    border:none;
+    color:white;
+    padding:8px 15px;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+.hero{
+    min-height:80vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
     text-align:center;
+    padding:20px;
+}
+
+.hero h1{
+    font-size:60px;
+    margin-bottom:15px;
+    animation:fadeIn 1s;
+}
+
+.hero p{
+    max-width:700px;
+    color:#cccccc;
 }
 
 .btn{
+    margin-top:30px;
     display:inline-block;
-    padding:15px 30px;
-    margin:10px;
+    padding:15px 35px;
     background:#7b2cff;
     color:white;
     text-decoration:none;
     border-radius:12px;
     font-size:18px;
-    font-weight:bold;
+    transition:.3s;
 }
 
 .btn:hover{
-    opacity:0.9;
+    transform:translateY(-4px);
+    box-shadow:0 0 20px #7b2cff;
+}
+
+.features{
+    padding:80px 10%;
+}
+
+.features h2{
+    text-align:center;
+    margin-bottom:40px;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:25px;
+}
+
+.card{
+    background:#171723;
+    padding:25px;
+    border-radius:16px;
+    transition:.3s;
+}
+
+.card:hover{
+    transform:translateY(-5px);
+}
+
+.community{
+    padding:80px 10%;
+    text-align:center;
+}
+
+.community a{
+    margin:10px;
+}
+
+footer{
+    text-align:center;
+    padding:30px;
+    color:#999;
+}
+
+@keyframes fadeIn{
+    from{
+        opacity:0;
+        transform:translateY(20px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
 }
 </style>
 </head>
 
 <body>
 
-<nav>
-    <a href="#download">Головна</a>
-    <a href="#community">Community</a>
-</nav>
+<div class="bg"></div>
 
-<section id="download">
-    <h1>ParadoxClient</h1>
-    <p>Завантажте останню версію клієнта.</p>
+<header>
+    <div class="logo">ParadoxClient</div>
 
-    <a href="ParadoxClient%20Beta%202.5.zip" download class="btn">
+    <nav>
+        <a href="#features">Features</a>
+        <a href="#community">Community</a>
+    </nav>
+
+    <button class="lang-btn" onclick="toggleLang()">🇺🇦 / 🇬🇧</button>
+</header>
+
+<section class="hero">
+    <h1 id="title">ParadoxClient</h1>
+
+    <p id="desc">
+        Сучасний клієнт із гарним інтерфейсом та швидкою роботою.
+    </p>
+
+    <a href="ParadoxClient%20Beta%202.5.zip" download class="btn" id="downloadBtn">
         Скачати клієнт
     </a>
 </section>
 
-<section id="community">
-    <h1>Community</h1>
+<section class="features" id="features">
+    <h2 id="featuresTitle">Features</h2>
+
+    <div class="grid">
+        <div class="card">
+            <h3>⚡ Fast</h3>
+            <p>Швидка та стабільна робота.</p>
+        </div>
+
+        <div class="card">
+            <h3>🎨 Modern UI</h3>
+            <p>Сучасний та красивий дизайн.</p>
+        </div>
+
+        <div class="card">
+            <h3>🔧 Updates</h3>
+            <p>Регулярні оновлення клієнта.</p>
+        </div>
+    </div>
+</section>
+
+<section class="community" id="community">
+    <h2>Community</h2>
 
     <a href="https://t.me/kimp1ntyao666" target="_blank" class="btn">
         Telegram
@@ -77,5 +217,17 @@ section{
     </a>
 </section>
 
-</body>
-</html>
+<footer>
+    © 2026 ParadoxClient
+</footer>
+
+<script>
+let ua = true;
+
+function toggleLang(){
+
+    ua = !ua;
+
+    if(ua){
+        document.getElementById("title").innerText="ParadoxClient";
+        document.getElementById("desc").innerText=
