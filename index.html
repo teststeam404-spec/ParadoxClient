@@ -10,149 +10,121 @@
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family:Segoe UI,sans-serif;
+    font-family:Arial,sans-serif;
 }
 
 body{
     background:#0b0b12;
     color:white;
-    overflow-x:hidden;
 }
 
+/* background */
 .bg{
     position:fixed;
     width:100%;
     height:100%;
     background:
-    radial-gradient(circle at 20% 20%, #7b2cff55 0%, transparent 30%),
-    radial-gradient(circle at 80% 30%, #9d4dff44 0%, transparent 30%),
-    radial-gradient(circle at 50% 80%, #5f00ff44 0%, transparent 30%);
-    animation:moveBg 8s infinite alternate;
+    radial-gradient(circle at 20% 20%, #7b2cff55, transparent 40%),
+    radial-gradient(circle at 80% 30%, #9d4dff44, transparent 40%),
+    radial-gradient(circle at 50% 80%, #5f00ff33, transparent 40%);
     z-index:-1;
+    animation:move 6s infinite alternate;
 }
 
-@keyframes moveBg{
+@keyframes move{
     from{transform:scale(1);}
     to{transform:scale(1.1);}
 }
 
+/* header */
 header{
     display:flex;
     justify-content:space-between;
     align-items:center;
     padding:20px 8%;
-    backdrop-filter:blur(10px);
+    background:#111;
 }
 
 .logo{
-    font-size:28px;
+    font-size:22px;
     font-weight:bold;
     color:#a855ff;
 }
 
 nav a{
     color:white;
+    margin:0 10px;
     text-decoration:none;
-    margin-left:20px;
 }
 
-.lang-btn{
+.lang{
     background:#7b2cff;
     border:none;
+    padding:8px 12px;
     color:white;
-    padding:8px 15px;
     border-radius:8px;
     cursor:pointer;
 }
 
+/* hero */
 .hero{
-    min-height:80vh;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
     text-align:center;
-    padding:20px;
+    padding:80px 20px;
 }
 
 .hero h1{
-    font-size:60px;
-    margin-bottom:15px;
-    animation:fadeIn 1s;
+    font-size:50px;
 }
 
 .hero p{
-    max-width:700px;
-    color:#cccccc;
+    margin-top:10px;
+    color:#ccc;
 }
 
 .btn{
-    margin-top:30px;
     display:inline-block;
-    padding:15px 35px;
+    margin-top:25px;
+    padding:14px 30px;
     background:#7b2cff;
     color:white;
     text-decoration:none;
-    border-radius:12px;
-    font-size:18px;
-    transition:.3s;
+    border-radius:10px;
+    transition:0.3s;
 }
 
 .btn:hover{
-    transform:translateY(-4px);
-    box-shadow:0 0 20px #7b2cff;
+    transform:scale(1.05);
 }
 
+/* features */
 .features{
-    padding:80px 10%;
-}
-
-.features h2{
+    padding:60px 10%;
     text-align:center;
-    margin-bottom:40px;
 }
 
 .grid{
     display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-    gap:25px;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:20px;
+    margin-top:30px;
 }
 
 .card{
-    background:#171723;
-    padding:25px;
-    border-radius:16px;
-    transition:.3s;
+    background:#181824;
+    padding:20px;
+    border-radius:12px;
 }
 
-.card:hover{
-    transform:translateY(-5px);
-}
-
+/* community */
 .community{
-    padding:80px 10%;
+    padding:60px 10%;
     text-align:center;
-}
-
-.community a{
-    margin:10px;
 }
 
 footer{
     text-align:center;
-    padding:30px;
-    color:#999;
-}
-
-@keyframes fadeIn{
-    from{
-        opacity:0;
-        transform:translateY(20px);
-    }
-    to{
-        opacity:1;
-        transform:translateY(0);
-    }
+    padding:20px;
+    color:#888;
 }
 </style>
 </head>
@@ -169,17 +141,14 @@ footer{
         <a href="#community">Community</a>
     </nav>
 
-    <button class="lang-btn" onclick="toggleLang()">🇺🇦 / 🇬🇧</button>
+    <button class="lang" onclick="toggleLang()">🇺🇦 / 🇬🇧</button>
 </header>
 
 <section class="hero">
     <h1 id="title">ParadoxClient</h1>
+    <p id="desc">Сучасний клієнт із красивим інтерфейсом.</p>
 
-    <p id="desc">
-        Сучасний клієнт із гарним інтерфейсом та швидкою роботою.
-    </p>
-
-    <a href="ParadoxClient%20Beta%202.5.zip" download class="btn" id="downloadBtn">
+    <a class="btn" id="downloadBtn" href="ParadoxClient%20Beta%202.5.zip" download>
         Скачати клієнт
     </a>
 </section>
@@ -190,44 +159,55 @@ footer{
     <div class="grid">
         <div class="card">
             <h3>⚡ Fast</h3>
-            <p>Швидка та стабільна робота.</p>
+            <p id="f1">Швидка робота</p>
         </div>
 
         <div class="card">
-            <h3>🎨 Modern UI</h3>
-            <p>Сучасний та красивий дизайн.</p>
+            <h3>🎨 UI</h3>
+            <p id="f2">Красивий дизайн</p>
         </div>
 
         <div class="card">
-            <h3>🔧 Updates</h3>
-            <p>Регулярні оновлення клієнта.</p>
+            <h3>🚀 Optimization</h3>
+            <p id="f3">Оптимізація продуктивності</p>
+        </div>
+
+        <div class="card">
+            <h3>🔒 Stability</h3>
+            <p id="f4">Стабільна робота</p>
         </div>
     </div>
 </section>
 
 <section class="community" id="community">
-    <h2>Community</h2>
+    <h2 id="communityTitle">Community</h2>
 
-    <a href="https://t.me/kimp1ntyao666" target="_blank" class="btn">
+    <a class="btn" href="https://t.me/kimp1ntyao666" target="_blank">
         Telegram
     </a>
 
-    <a href="https://discord.gg/6U5Z4V92y" target="_blank" class="btn">
+    <a class="btn" href="https://discord.gg/6U5Z4V92y" target="_blank">
         Discord
     </a>
 </section>
 
 <footer>
-    © 2026 ParadoxClient
+    © ParadoxClient
 </footer>
 
 <script>
 let ua = true;
 
 function toggleLang(){
-
     ua = !ua;
 
     if(ua){
         document.getElementById("title").innerText="ParadoxClient";
-        document.getElementById("desc").innerText=
+        document.getElementById("desc").innerText="Сучасний клієнт із красивим інтерфейсом.";
+        document.getElementById("downloadBtn").innerText="Скачати клієнт";
+        document.getElementById("featuresTitle").innerText="Можливості";
+        document.getElementById("communityTitle").innerText="Спільнота";
+
+        document.getElementById("f1").innerText="Швидка робота";
+        document.getElementById("f2").innerText="Красивий дизайн";
+        document.getElementById("f3").
