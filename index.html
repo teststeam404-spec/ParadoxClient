@@ -364,6 +364,10 @@ footer{border-top:1px solid var(--border);padding:60px 20px 30px;max-width:1200p
       <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 2h1.5l1.5 7h7l1.5-5H5"/><circle cx="7" cy="13" r="1"/><circle cx="11" cy="13" r="1"/></svg>
       <span>Магазин</span>
     </a>
+    <a class="nav-link" onclick="showPage('chat')">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3h12a1 1 0 011 1v7a1 1 0 01-1 1H9l-3 2v-2H2a1 1 0 01-1-1V4a1 1 0 011-1z"/></svg>
+      <span>Чат</span>
+    </a>
   </div><!-- end nav-links -->
   <div class="nav-sep"></div>
   <div class="lang-switcher">
@@ -1204,6 +1208,45 @@ footer{border-top:1px solid var(--border);padding:60px 20px 30px;max-width:1200p
   </div>
 </div>
 
+<!-- CHAT PAGE -->
+<div id="page-chat" class="page">
+  <div style="padding:100px 20px 20px;max-width:820px;margin:0 auto;height:100vh;display:flex;flex-direction:column">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px;flex-shrink:0">
+      <div style="width:4px;height:28px;background:linear-gradient(to bottom,var(--accent),#a855f7);border-radius:4px"></div>
+      <h2 style="font-size:20px;font-weight:900">Глобальный чат</h2>
+      <span style="padding:2px 10px;border-radius:20px;background:#4caf8220;border:1px solid #4caf8240;font-size:11px;color:#4caf82;font-weight:700">🟢 Online</span>
+    </div>
+    <!-- Messages -->
+    <div id="chatMessages" style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding:16px;background:var(--bg3);border:1px solid var(--border);border-radius:16px;margin-bottom:14px;min-height:0"></div>
+    <!-- Input -->
+    <div style="display:flex;gap:10px;flex-shrink:0" id="chatInputArea">
+      <input id="chatInput" class="form-input" type="text" placeholder="Написать сообщение..." maxlength="300" style="flex:1;padding:12px 16px;border-radius:12px;background:var(--bg3);border:1px solid var(--border2);color:var(--text);font-size:14px;font-family:inherit;outline:none" onkeydown="if(event.key==='Enter')sendChatMsg()">
+      <button onclick="sendChatMsg()" style="padding:12px 22px;border-radius:12px;background:var(--accent);border:none;color:#fff;font-weight:700;font-size:14px;cursor:pointer;font-family:inherit;flex-shrink:0">→</button>
+    </div>
+    <div id="chatLoginNotice" style="display:none;text-align:center;padding:20px;font-size:14px;color:var(--text3)">
+      <a onclick="openModal('login')" style="color:var(--accent);cursor:pointer;font-weight:700">Войдите</a>, чтобы писать в чат
+    </div>
+  </div>
+</div>
+
+<!-- EMAIL VERIFY MODAL -->
+<div class="modal-overlay" id="verifyModal" style="display:none">
+  <div style="background:var(--bg3);border:1px solid var(--border2);border-radius:24px;padding:32px;max-width:400px;width:100%;position:relative">
+    <button onclick="closeModal('verifyModal')" style="position:absolute;top:16px;right:16px;background:none;border:none;color:var(--text3);cursor:pointer;font-size:20px">✕</button>
+    <div style="font-size:32px;text-align:center;margin-bottom:12px">📧</div>
+    <h2 style="font-size:18px;font-weight:900;text-align:center;margin-bottom:8px">Подтверждение Email</h2>
+    <p style="font-size:13px;color:var(--text3);text-align:center;margin-bottom:6px">Код отправлен на: <b id="verifyEmailDisplay" style="color:var(--accent)"></b></p>
+    <p style="font-size:12px;color:#f0c040;text-align:center;margin-bottom:20px;background:#f0c04015;padding:8px;border-radius:8px;border:1px solid #f0c04030">⚠️ Так как сайт локальный — код отображается ниже для теста</p>
+    <div id="verifyCodeHint" style="text-align:center;font-size:22px;font-weight:900;letter-spacing:8px;color:var(--accent);margin-bottom:20px;padding:12px;background:#ffffff08;border-radius:12px"></div>
+    <div class="input-wrap" style="margin-bottom:16px">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="12" height="9" rx="1"/><path d="M2 7l6 4 6-4"/></svg>
+      <input class="form-input" id="verifyCodeInput" type="text" placeholder="Введите 6-значный код" maxlength="6">
+    </div>
+    <button class="btn-submit" style="width:100%" onclick="confirmVerifyCode()">✅ Подтвердить</button>
+    <div id="verifyError" style="font-size:13px;color:var(--red);margin-top:10px;display:none;text-align:center"></div>
+  </div>
+</div>
+
 <!-- HISTORY BAR -->
 <div class="history-bar hidden" id="historyBar"></div>
 
@@ -1348,36 +1391,286 @@ function getSession(){try{return JSON.parse(localStorage.getItem('paradox_sessio
 function saveSession(u){localStorage.setItem('paradox_session',JSON.stringify(u))}
 function clearSession(){localStorage.removeItem('paradox_session')}
 
+// ==================== EMAIL VERIFICATION ====================
+let pendingRegData = null;
+let verifyCode = null;
+
+function generateCode(){
+  return String(Math.floor(100000 + Math.random()*900000));
+}
+
+function startVerification(userData){
+  pendingRegData = userData;
+  verifyCode = generateCode();
+  document.getElementById('verifyEmailDisplay').textContent = userData.email;
+  document.getElementById('verifyCodeHint').textContent = verifyCode;
+  document.getElementById('verifyCodeInput').value = '';
+  document.getElementById('verifyError').style.display = 'none';
+  openModal('verify');
+}
+
+function confirmVerifyCode(){
+  const input = document.getElementById('verifyCodeInput').value.trim();
+  const errEl = document.getElementById('verifyError');
+  if(!input){errEl.textContent='Введите код';errEl.style.display='block';return;}
+  if(input !== verifyCode){errEl.textContent='❌ Неверный код. Попробуйте ещё раз.';errEl.style.display='block';return;}
+  // code correct — complete registration
+  closeModal('verifyModal');
+  const users = getUsers();
+  users.push(pendingRegData);
+  saveUsers(users);
+  saveSession(pendingRegData);
+  currentUser = pendingRegData;
+  pendingRegData = null; verifyCode = null;
+  showToast('✅ Email подтверждён! Добро пожаловать!','success');
+  updateNav(); showPage('cabinet');
+}
+
+// ==================== ADMIN PROTECTION ====================
+const ADMIN_ACCOUNTS = {
+  'darkpidort': {email:'eeeedark66@gmail.com',   secret:'1488'},
+  'Kimp1ntyao': {email:'teststeam404@gmail.com',  secret:'kimp_secret_2025'},
+};
+
+function isProtectedAdmin(username){
+  return !!ADMIN_ACCOUNTS[username];
+}
+
+// ==================== GLOBAL CHAT ====================
+const CHAT_KEY = 'paradox_chat_messages';
+const CHAT_MAX = 200;
+
+const ROLE_LABELS = {
+  owner:'👑 Owner', coder:'💻 Кодер', media:'🎬 Ютубер',
+  tester:'🧪 Тестер', admin:'⭐ Admin', '':'Игрок'
+};
+const ROLE_COLORS = {
+  owner:'#ffd700', coder:'#00c8ff', media:'#ff44aa',
+  tester:'#44ff88', admin:'#ff8800', '':'var(--text3)'
+};
+
+function getChatMessages(){
+  try{return JSON.parse(localStorage.getItem(CHAT_KEY)||'[]')}catch{return[]}
+}
+function saveChatMessages(msgs){
+  localStorage.setItem(CHAT_KEY, JSON.stringify(msgs.slice(-CHAT_MAX)));
+}
+
+function getUserRoleLabel(user){
+  if(!user) return '';
+  const isAdm = (user.username==='darkpidort')||(user.username==='Kimp1ntyao')||user.isAdmin;
+  if(isAdm) return 'admin';
+  return user.role||'';
+}
+
+function renderChat(){
+  const msgs = getChatMessages();
+  const box = document.getElementById('chatMessages');
+  if(!box) return;
+  if(msgs.length===0){
+    box.innerHTML='<div style="text-align:center;color:var(--text3);font-size:13px;margin:auto">Сообщений пока нет. Будь первым!</div>';
+  } else {
+    box.innerHTML = msgs.map(m=>{
+      const isMe = currentUser && m.username === currentUser.username;
+      const roleKey = m.roleKey||'';
+      const roleLabel = ROLE_LABELS[roleKey]||'Игрок';
+      const roleColor = ROLE_COLORS[roleKey]||'var(--text3)';
+      const prefix = m.prefix ? `<span style="display:inline-block;padding:1px 8px;border-radius:12px;font-size:10px;font-weight:900;background:${m.prefixColor||'#7c6ef5'}30;border:1px solid ${m.prefixColor||'#7c6ef5'}60;color:${m.prefixColor||'#7c6ef5'};margin-right:5px;vertical-align:middle">${m.prefix}</span>` : '';
+      return `<div style="display:flex;flex-direction:column;align-items:${isMe?'flex-end':'flex-start'};gap:3px">
+        <div style="display:flex;align-items:center;gap:6px;${isMe?'flex-direction:row-reverse':''}">
+          <span style="font-size:12px;font-weight:800;color:var(--text)">${m.username}</span>
+          <span style="font-size:10px;color:${roleColor};font-weight:700">${roleLabel}</span>
+          <span style="font-size:10px;color:var(--text3)">${m.time}</span>
+        </div>
+        <div style="max-width:75%;padding:9px 14px;border-radius:${isMe?'16px 4px 16px 16px':'4px 16px 16px 16px'};background:${isMe?'var(--accent)':'#ffffff0a'};font-size:14px;line-height:1.5;word-break:break-word">
+          ${prefix}${escapeHtml(m.text)}
+        </div>
+      </div>`;
+    }).join('');
+    box.scrollTop = box.scrollHeight;
+  }
+  // show/hide input based on login
+  const inputArea = document.getElementById('chatInputArea');
+  const notice = document.getElementById('chatLoginNotice');
+  if(inputArea && notice){
+    inputArea.style.display = currentUser ? 'flex' : 'none';
+    notice.style.display = currentUser ? 'none' : 'block';
+  }
+}
+
+function escapeHtml(str){
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function sendChatMsg(){
+  if(!currentUser){showToast('Войдите чтобы писать в чат','error');return;}
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if(!text) return;
+  if(text.length>300){showToast('Сообщение слишком длинное','error');return;}
+  // safety check
+  const safe = isSafe(text,'Сообщение');
+  if(!safe.ok){showToast('🛡 '+safe.reason,'error');return;}
+
+  const roleKey = getUserRoleLabel(currentUser);
+  const activePrefix = getUserActivePrefix();
+  let prefixName = null;
+  let prefixColor = '#7c6ef5';
+  if(activePrefix){
+    prefixName = activePrefix.prefix || activePrefix.name || null;
+    prefixColor = activePrefix.color || '#7c6ef5';
+  }
+  const msgs = getChatMessages();
+  msgs.push({
+    username: currentUser.username,
+    text: text,
+    time: new Date().toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'}),
+    roleKey,
+    prefix: prefixName,
+    prefixColor: prefixColor,
+  });
+  saveChatMessages(msgs);
+  input.value = '';
+  renderChat();
+}
+
+// Poll for new messages every 3 seconds
+setInterval(()=>{
+  if(currentPage==='chat') renderChat();
+},3000);
+
+// ==================== SECURITY ====================
+const BLOCKED_PATTERNS = [
+  // SQL injection patterns
+  /(\b(SELECT|INSERT|UPDATE|DELETE|DROP|CREATE|ALTER|EXEC|UNION|SCRIPT)\b)/i,
+  /(--|;|\/\*|\*\/|xp_|0x[0-9a-f]+)/i,
+  /('|"|`)(.*?)(OR|AND)(\s+)('|"|`|1|true)/i,
+  /\b(OR|AND)\b\s+['"]?\d+['"]?\s*=\s*['"]?\d+['"]?/i,
+  /[<>{}[\]\\]/,         // HTML/script injection chars
+  /javascript:/i,        // JS injection
+  /on\w+\s*=/i,          // event handler injection
+  /<\s*script/i,         // script tag
+];
+
+function sanitize(str){
+  // strip dangerous characters, return safe string
+  return str.replace(/[<>"'`\\]/g, '').trim();
+}
+
+function isSafe(value, fieldName){
+  for(const p of BLOCKED_PATTERNS){
+    if(p.test(value)){
+      return {ok:false, reason:`Недопустимые символы в поле «${fieldName}»`};
+    }
+  }
+  return {ok:true};
+}
+
+function validateEmail(email){
+  // must contain exactly one @
+  const atCount = (email.match(/@/g)||[]).length;
+  if(atCount === 0) return {ok:false, reason:'Email должен содержать символ @'};
+  if(atCount > 1)  return {ok:false, reason:'Email содержит лишний символ @'};
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return {ok:false, reason:'Некорректный формат email'};
+  return {ok:true};
+}
+
+function validateUsername(username){
+  if(username.length < 3) return {ok:false, reason:'Логин должен быть не менее 3 символов'};
+  if(username.length > 24) return {ok:false, reason:'Логин не более 24 символов'};
+  if(!/^[a-zA-Z0-9_а-яА-ЯёЁ]+$/.test(username)) return {ok:false, reason:'Логин: только буквы, цифры и _'};
+  return {ok:true};
+}
+
+function validatePassword(password){
+  if(password.length < 6) return {ok:false, reason:'Пароль не менее 6 символов'};
+  if(password.length > 64) return {ok:false, reason:'Пароль не более 64 символов'};
+  return {ok:true};
+}
+
+// ==================== AUTH ====================
 function doRegister(){
-  const username = document.getElementById('regUsername').value.trim();
-  const email = document.getElementById('regEmail').value.trim();
-  const password = document.getElementById('regPassword').value;
+  const rawUsername = document.getElementById('regUsername').value.trim();
+  const rawEmail    = document.getElementById('regEmail').value.trim();
+  const rawPassword = document.getElementById('regPassword').value;
   const errEl = document.getElementById('registerError');
   const sucEl = document.getElementById('registerSuccess');
   errEl.style.display='none'; sucEl.style.display='none';
-  if(!username||!email||!password){errEl.textContent='Заполните все поля';errEl.style.display='block';return}
-  if(password.length<6){errEl.textContent='Пароль не менее 6 символов';errEl.style.display='block';return}
-  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){errEl.textContent='Некорректный email';errEl.style.display='block';return}
+
+  if(!rawUsername||!rawEmail||!rawPassword){errEl.textContent='Заполните все поля';errEl.style.display='block';return}
+
+  // Security checks
+  const safeChecks = [
+    isSafe(rawUsername,'Логин'),
+    isSafe(rawEmail,'Email'),
+    isSafe(rawPassword,'Пароль'),
+  ];
+  for(const c of safeChecks){ if(!c.ok){errEl.textContent='🛡 '+c.reason;errEl.style.display='block';return} }
+
+  // Validation
+  const usernameCheck = validateUsername(rawUsername);
+  if(!usernameCheck.ok){errEl.textContent=usernameCheck.reason;errEl.style.display='block';return}
+
+  const emailCheck = validateEmail(rawEmail);
+  if(!emailCheck.ok){errEl.textContent=emailCheck.reason;errEl.style.display='block';return}
+
+  const passwordCheck = validatePassword(rawPassword);
+  if(!passwordCheck.ok){errEl.textContent=passwordCheck.reason;errEl.style.display='block';return}
+
+  const username = sanitize(rawUsername);
+  const email    = rawEmail.toLowerCase().trim();
+
+  // Admin account protection — block anyone trying to register with protected username/email
+  if(isProtectedAdmin(username)){
+    const adminAcc = ADMIN_ACCOUNTS[username];
+    // check secret admin password (stored in a hidden field or prompted)
+    const secret = prompt('Это защищённый аккаунт администратора.\nВведите секретный пароль:');
+    if(secret !== adminAcc.secret){
+      errEl.textContent='🛡 Неверный секретный пароль администратора';errEl.style.display='block';return;
+    }
+    if(email !== adminAcc.email){
+      errEl.textContent='🛡 Этот логин зарезервирован. Используйте другой.';errEl.style.display='block';return;
+    }
+  }
+  // also block protected email
+  for(const [, acc] of Object.entries(ADMIN_ACCOUNTS)){
+    if(email === acc.email && !isProtectedAdmin(username)){
+      errEl.textContent='🛡 Этот email зарезервирован';errEl.style.display='block';return;
+    }
+  }
+
   const users = getUsers();
   if(users.find(u=>u.email===email||u.username===username)){errEl.textContent='Аккаунт уже существует';errEl.style.display='block';return}
-  const newUser = {username,email,password,regDate:new Date().toLocaleDateString('ru-RU'),isAdmin:false,role:''};
-  users.push(newUser);
-  saveUsers(users);
-  saveSession(newUser);
-  currentUser = newUser;
-  sucEl.textContent='Аккаунт создан! Добро пожаловать!';sucEl.style.display='block';
-  setTimeout(()=>{closeModal('registerModal');updateNav();showPage('cabinet')},1200);
+
+  const newUser = {username,email,password:rawPassword,regDate:new Date().toLocaleDateString('ru-RU'),isAdmin:false,role:''};
+  // Start email verification instead of direct registration
+  closeModal('registerModal');
+  startVerification(newUser);
 }
 
 function doLogin(){
-  const email = document.getElementById('loginEmail').value.trim();
-  const password = document.getElementById('loginPassword').value;
+  const rawEmail    = document.getElementById('loginEmail').value.trim();
+  const rawPassword = document.getElementById('loginPassword').value;
   const errEl = document.getElementById('loginError');
   errEl.style.display='none';
-  if(!email||!password){errEl.textContent='Заполните все поля';errEl.style.display='block';return}
+
+  if(!rawEmail||!rawPassword){errEl.textContent='Заполните все поля';errEl.style.display='block';return}
+
+  // Security checks on input
+  const safeChecks = [isSafe(rawEmail,'Email/Логин'), isSafe(rawPassword,'Пароль')];
+  for(const c of safeChecks){ if(!c.ok){errEl.textContent='🛡 '+c.reason;errEl.style.display='block';return} }
+
+  // If looks like email — validate @
+  if(rawEmail.includes('@')){
+    const emailCheck = validateEmail(rawEmail);
+    if(!emailCheck.ok){errEl.textContent=emailCheck.reason;errEl.style.display='block';return}
+  }
+
+  const email = rawEmail.toLowerCase().trim();
   const users = getUsers();
-  const user = users.find(u=>(u.email===email||u.username===email)&&u.password===password);
+  const user = users.find(u=>(u.email===email||u.username===rawEmail)&&u.password===rawPassword);
   if(!user){errEl.textContent='Неверный логин или пароль';errEl.style.display='block';return}
+
   // check ban
   const bans = JSON.parse(localStorage.getItem('paradox_bans')||'{}');
   const ban = bans[user.username];
@@ -1385,6 +1678,7 @@ function doLogin(){
     errEl.textContent='🔨 Аккаунт заблокирован. Осталось: '+formatBanTime(ban.until);
     errEl.style.display='block';return;
   }
+
   saveSession(user);
   currentUser = user;
   closeModal('loginModal');
@@ -2327,7 +2621,7 @@ function adminSetCustomPrefix(){
     localStorage.removeItem('paradox_active_prefix_'+login);
     msg.textContent='✅ Префикс у '+login+' убран';
   } else {
-    const prefix = {id:'custom_'+login, name, color, prefix:name};
+    const prefix = {id:'custom_'+login, name:name, prefix:name, color:color};
     localStorage.setItem('paradox_active_prefix_'+login, JSON.stringify(prefix));
     msg.textContent='✅ Префикс «'+name+'» выдан '+login;
   }
@@ -2383,6 +2677,9 @@ function showPage(name){
     if(name==='admin'){
       if(!currentUser){openModal('login');document.getElementById('page-home').classList.add('active');if(next)next.classList.remove('active');currentPage='home';return}
       adminLoadUsers();
+    }
+    if(name==='chat'){
+      setTimeout(()=>renderChat(),100);
     }
     if(name==='docs') showDoc('install');
     window.scrollTo(0,0);
@@ -2556,6 +2853,7 @@ const pagesMeta = {
   cabinet: {label:{ru:'Личный кабинет',en:'Cabinet',ua:'Особистий кабінет'}, icon:'<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="4" r="2"/><path d="M2 11c0-2.209 1.791-4 4-4s4 1.791 4 4"/></svg>'},
   shop:    {label:{ru:'Магазин',en:'Shop',ua:'Магазин'}, icon:'<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1h1.5l1.5 6h6l1-4H4"/><circle cx="6" cy="11" r="1"/><circle cx="9.5" cy="11" r="1"/></svg>'},
   admin:   {label:{ru:'Админка',en:'Admin',ua:'Адмінка'}, icon:'⭐'},
+  chat:    {label:{ru:'Чат',en:'Chat',ua:'Чат'}, icon:'💬'},
 };
 
 // Modal metadata
