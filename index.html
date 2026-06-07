@@ -862,6 +862,36 @@ footer{border-top:1px solid var(--border);padding:60px 20px 30px;max-width:1200p
           <div class="stat-row"><span class="stat-label">Статус сервера</span><span class="stat-value green">🟢 Online</span></div>
         </div>
 
+        <!-- Генератор ключей -->
+        <div class="cabinet-card" style="grid-column:1/-1">
+          <h3 style="color:#4caf82;margin-bottom:16px">⚡ ГЕНЕРАТОР КЛЮЧЕЙ НА МОНЕТЫ</h3>
+          <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:12px;align-items:end;margin-bottom:12px">
+            <div>
+              <div style="font-size:11px;color:var(--text3);margin-bottom:6px;font-weight:700;letter-spacing:.06em">КОЛИЧЕСТВО МОНЕТ</div>
+              <div class="input-wrap">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 5v3M8 11h.01"/></svg>
+                <input class="form-input" id="genKeyCoins" type="number" min="10" max="10000" value="100" placeholder="10 — 10000 монет">
+              </div>
+            </div>
+            <div>
+              <div style="font-size:11px;color:var(--text3);margin-bottom:6px;font-weight:700;letter-spacing:.06em">КОЛИЧЕСТВО КЛЮЧЕЙ</div>
+              <div class="input-wrap">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M11 1a4 4 0 100 8 4 4 0 000-8zM7.4 7.4L1 13.8" stroke-linecap="round"/><circle cx="11" cy="5" r="1.2" fill="currentColor" stroke="none"/></svg>
+                <input class="form-input" id="genKeyCount" type="number" min="1" max="50" value="5" placeholder="Кол-во (1-50)">
+              </div>
+            </div>
+            <button class="btn-submit" style="background:#4caf82;margin-top:0;white-space:nowrap;padding:14px 20px" onclick="adminGenerateKeys()">⚡ Сгенерировать</button>
+          </div>
+          <div id="genKeyMsg" style="font-size:13px;margin-bottom:10px;display:none"></div>
+          <div id="genKeyResult" style="display:none">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+              <div style="font-size:12px;color:var(--text3);font-weight:700;letter-spacing:.06em">СГЕНЕРИРОВАННЫЕ КЛЮЧИ</div>
+              <button onclick="copyAllKeys()" style="padding:5px 12px;border-radius:8px;background:#4caf8220;border:1px solid #4caf8240;color:#4caf82;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">📋 Копировать все</button>
+            </div>
+            <div id="genKeyList" style="display:flex;flex-direction:column;gap:6px;max-height:200px;overflow-y:auto;padding:2px"></div>
+          </div>
+        </div>
+
         <!-- Все ключи -->
         <div class="cabinet-card" style="grid-column:1/-1">
           <h3 style="color:#f0c040;margin-bottom:16px">🔑 ВСЕ КЛЮЧИ</h3>
@@ -1298,18 +1328,74 @@ footer{border-top:1px solid var(--border);padding:60px 20px 30px;max-width:1200p
         <div class="stat-row"><span class="stat-label">Статус сервера</span><span class="stat-value green">🟢 Online</span></div>
       </div>
 
+      <!-- Генератор ключей -->
+      <div class="cabinet-card" style="grid-column:1/-1">
+        <h3 style="color:#4caf82;margin-bottom:16px">⚡ ГЕНЕРАТОР КЛЮЧЕЙ НА МОНЕТЫ</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:12px;align-items:end;margin-bottom:12px">
+          <div>
+            <div style="font-size:11px;color:var(--text3);margin-bottom:6px;font-weight:700;letter-spacing:.06em">МОНЕТ НА КЛЮЧ (10–10000)</div>
+            <div class="input-wrap">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 5v3M8 11h.01"/></svg>
+              <input class="form-input" id="genKeyCoinsAdm" type="number" min="10" max="10000" value="100" placeholder="10 — 10000 монет">
+            </div>
+          </div>
+          <div>
+            <div style="font-size:11px;color:var(--text3);margin-bottom:6px;font-weight:700;letter-spacing:.06em">КОЛИЧЕСТВО КЛЮЧЕЙ (1–50)</div>
+            <div class="input-wrap">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M11 1a4 4 0 100 8 4 4 0 000-8zM7.4 7.4L1 13.8" stroke-linecap="round"/><circle cx="11" cy="5" r="1.2" fill="currentColor" stroke="none"/></svg>
+              <input class="form-input" id="genKeyCountAdm" type="number" min="1" max="50" value="5" placeholder="1-50">
+            </div>
+          </div>
+          <button class="btn-submit" style="background:#4caf82;color:#000;font-weight:900;margin-top:0;white-space:nowrap;padding:14px 20px" onclick="adminGenerateKeys('Adm')">⚡ Создать</button>
+        </div>
+        <div id="genKeyMsgAdm" style="font-size:13px;margin-bottom:10px;display:none"></div>
+        <div id="genKeyResultAdm" style="display:none">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+            <div style="font-size:12px;color:var(--text3);font-weight:700;letter-spacing:.06em">ГОТОВЫЕ КЛЮЧИ</div>
+            <button onclick="copyAllKeys('Adm')" style="padding:5px 12px;border-radius:8px;background:#4caf8220;border:1px solid #4caf8240;color:#4caf82;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">📋 Копировать все</button>
+          </div>
+          <div id="genKeyListAdm" style="display:flex;flex-direction:column;gap:6px;max-height:200px;overflow-y:auto;padding:2px"></div>
+        </div>
+      </div>
+
       <!-- Ключи -->
       <div class="cabinet-card" style="grid-column:1/-1">
         <h3 style="color:#f0c040;margin-bottom:16px">🔑 ВСЕ КЛЮЧИ</h3>
         <div style="display:flex;flex-wrap:wrap;gap:6px;max-height:340px;overflow-y:auto" id="adminKeysList"></div>
       </div>
 
+      <!-- Бета -->
+      <div class="cabinet-card">
+        <h3 style="color:#a855f7;margin-bottom:16px">🔮 ВЫДАТЬ БЕТУ</h3>
+        <div class="input-wrap" style="margin-bottom:12px">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="6" r="2.5"/><path d="M3 14c0-2.761 2.239-5 5-5s5 2.239 5 5"/></svg>
+          <input class="form-input" id="adminBetaUser" type="text" placeholder="Логин">
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn-submit" style="background:#a855f7;margin-top:0;flex:1" onclick="adminGiveBeta()">🔮 Выдать</button>
+          <button class="btn-submit" style="background:#444;margin-top:0;flex:1" onclick="adminRevokeBeta()">✕ Забрать</button>
+        </div>
+        <div id="adminBetaMsg" style="font-size:13px;margin-top:10px;display:none"></div>
+      </div>
+
+      <!-- 🎉 ПРИКОЛЮХИ -->
+      <div class="cabinet-card" style="grid-column:1/-1;border-color:#ff44aa40">
+        <h3 style="color:#ff44aa;margin-bottom:16px">🎉 ПРИКОЛЮХИ</h3>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px">
+          <button onclick="adminFunRainbow()" style="padding:12px;border-radius:12px;background:linear-gradient(135deg,#ff4444,#ff8800,#f0c040,#4caf82,#00c8ff,#a855f7);border:none;color:#fff;font-weight:800;font-size:14px;cursor:pointer;font-family:inherit;letter-spacing:.02em">🌈 Радуга сайта</button>
+          <button onclick="adminFunSnow()" style="padding:12px;border-radius:12px;background:#00c8ff20;border:1px solid #00c8ff40;color:#00c8ff;font-weight:800;font-size:14px;cursor:pointer;font-family:inherit">❄️ Снегопад</button>
+          <button onclick="adminFunMatrix()" style="padding:12px;border-radius:12px;background:#4caf8220;border:1px solid #4caf8240;color:#4caf82;font-weight:800;font-size:14px;cursor:pointer;font-family:inherit">🟢 Матрица</button>
+          <button onclick="adminFunFireworks()" style="padding:12px;border-radius:12px;background:#f0c04020;border:1px solid #f0c04040;color:#f0c040;font-weight:800;font-size:14px;cursor:pointer;font-family:inherit">🎆 Фейерверк</button>
+          <button onclick="adminFunShake()" style="padding:12px;border-radius:12px;background:#ff444420;border:1px solid #ff444440;color:#ff4444;font-weight:800;font-size:14px;cursor:pointer;font-family:inherit">💥 Трясти сайт</button>
+          <button onclick="adminFunDark()" style="padding:12px;border-radius:12px;background:#ffffff08;border:1px solid var(--border2);color:var(--text2);font-weight:800;font-size:14px;cursor:pointer;font-family:inherit">🌗 Переключить тему</button>
+          <button onclick="adminClearChat()" style="padding:12px;border-radius:12px;background:#e0555520;border:1px solid #e0555540;color:#e05555;font-weight:800;font-size:14px;cursor:pointer;font-family:inherit">🗑 Очистить чат</button>
+          <button onclick="adminResetAllCoins()" style="padding:12px;border-radius:12px;background:#ff880020;border:1px solid #ff880040;color:#ff8800;font-weight:800;font-size:14px;cursor:pointer;font-family:inherit">💸 Сбросить монеты</button>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
-
-<!-- HISTORY BAR -->
-<div class="history-bar hidden" id="historyBar"></div>
 
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
@@ -1471,6 +1557,7 @@ function activateAdminPanel(){
   if(panel){ panel.style.cssText='display:block;margin-top:32px'; }
   adminLoadUsers();
   adminLoadChats();
+  adminLoadKeys();
   showToast('✅ Панель администратора активирована','success');
   // remember for this session
   sessionStorage.setItem('paradox_admin_unlocked','1');
@@ -1747,7 +1834,25 @@ setInterval(()=>{
   const modal = document.getElementById('supportModal');
   if(modal && modal.classList.contains('active')) renderSupportMessages();
 }, 3000);
-function getUsers(){try{return JSON.parse(localStorage.getItem('paradox_users')||'[]')}catch{return[]}}
+function getUsers(){
+  try{
+    const users = JSON.parse(localStorage.getItem('paradox_users')||'[]');
+    // Ensure protected admin accounts always exist in the user list
+    const adminAccounts = [
+      {username:'darkpidort', email:'eeeedark66@gmail.com', password:'', regDate:'01.01.2026', isAdmin:true, role:'owner'},
+      {username:'Kimp1ntyao', email:'teststeam404@gmail.com', password:'', regDate:'01.01.2026', isAdmin:true, role:'owner'},
+    ];
+    let changed = false;
+    adminAccounts.forEach(adm=>{
+      if(!users.find(u=>u.username===adm.username)){
+        users.push(adm);
+        changed = true;
+      }
+    });
+    if(changed) localStorage.setItem('paradox_users', JSON.stringify(users));
+    return users;
+  }catch{return[]}
+}
 function saveUsers(u){localStorage.setItem('paradox_users',JSON.stringify(u))}
 function getSession(){try{return JSON.parse(localStorage.getItem('paradox_session')||'null')}catch{return null}}
 function saveSession(u){localStorage.setItem('paradox_session',JSON.stringify(u))}
@@ -1767,7 +1872,7 @@ function doRegister(){
   // captcha check
   if(!captchaInput||captchaInput!==currentCaptcha){errEl.textContent='❌ Неверная капча. Попробуйте снова';errEl.style.display='block';generateCaptcha();return}
   // block protected account names/emails
-  if(false){errEl.textContent='❌ Это имя недоступно для регистрации';errEl.style.display='block';return}
+  if(PROTECTED_ACCOUNTS[username]){errEl.textContent='❌ Это имя недоступно для регистрации';errEl.style.display='block';return}
   if(Object.values(PROTECTED_ACCOUNTS).some(a=>a.email===email)){errEl.textContent='❌ Этот email недоступен для регистрации';errEl.style.display='block';return}
   const users = getUsers();
   if(users.find(u=>u.email===email||u.username===username)){errEl.textContent='Аккаунт уже существует';errEl.style.display='block';return}
@@ -1789,13 +1894,33 @@ function doLogin(){
   errEl.style.display='none';
   if(!email||!password){errEl.textContent='Заполните все поля';errEl.style.display='block';return}
   const users = getUsers();
-  const user = users.find(u=>(u.email===email||u.username===email)&&u.password===password);
-  if(!user){errEl.textContent='Неверный логин или пароль';errEl.style.display='block';return}
-  // check admin protection
-  const protection = PROTECTED_ACCOUNTS[user.username];
-  if(protection){
-    if(!secretKey){errEl.textContent='🔐 Требуется секретный ключ';errEl.style.display='block';return}
-    if(secretKey !== protection.secretKey){errEl.textContent='🔐 Неверный секретный ключ';errEl.style.display='block';return}
+  // Check protected accounts first (they have special passwords stored in PROTECTED_ACCOUNTS)
+  let user = null;
+  const protectedEntry = Object.entries(PROTECTED_ACCOUNTS).find(([uname, data])=>(uname===email||data.email===email));
+  if(protectedEntry){
+    const [uname, data] = protectedEntry;
+    // For protected accounts, password is stored in localStorage (set on first successful login)
+    const storedPwd = localStorage.getItem('paradox_pwd_'+uname);
+    // Allow if password matches stored password OR if no stored password yet (first login with secret key)
+    const pwdMatch = storedPwd ? (storedPwd === password) : true;
+    if(!pwdMatch){errEl.textContent='Неверный логин или пароль';errEl.style.display='block';return}
+    if(!secretKey){errEl.textContent='🔐 Требуется секретный ключ администратора';errEl.style.display='block';
+      const wrap=document.getElementById('adminKeyWrap'); if(wrap) wrap.style.display='block'; return}
+    if(secretKey !== data.secretKey){errEl.textContent='🔐 Неверный секретный ключ';errEl.style.display='block';return}
+    // Save password on first login
+    if(!storedPwd) localStorage.setItem('paradox_pwd_'+uname, password);
+    user = users.find(u=>u.username===uname);
+    if(!user){user={username:uname,email:data.email,password,regDate:'01.01.2026',isAdmin:true,role:'owner'};users.push(user);saveUsers(users);}
+    else { user.password = password; saveUsers(users); }
+  } else {
+    user = users.find(u=>(u.email===email||u.username===email)&&u.password===password);
+    if(!user){errEl.textContent='Неверный логин или пароль';errEl.style.display='block';return}
+    // check if non-protected user accidentally matches protected account
+    const protection = PROTECTED_ACCOUNTS[user.username];
+    if(protection){
+      if(!secretKey){errEl.textContent='🔐 Требуется секретный ключ администратора';errEl.style.display='block';return}
+      if(secretKey !== protection.secretKey){errEl.textContent='🔐 Неверный секретный ключ';errEl.style.display='block';return}
+    }
   }
   // check ban
   const bans = JSON.parse(localStorage.getItem('paradox_bans')||'{}');
@@ -1806,7 +1931,7 @@ function doLogin(){
   }
   saveSession(user);
   currentUser = user;
-  _onUserLogin(user, password); // ← подключаем к серверу
+  _onUserLogin(user, password);
   closeModal('loginModal');
   updateNav();
   showPage('cabinet');
@@ -1827,13 +1952,17 @@ function logout(){ doLogout(); }
 
 function updateNav(){
   const btn = document.getElementById('navCabinetBtn');
-  if(currentUser){
-    btn.querySelector('span').textContent = currentUser.username;
-  } else {
-    btn.querySelector('span').setAttribute('data-i18n','nav_cabinet');
-    btn.querySelector('span').textContent = i18n[currentLang]['nav_cabinet'];
+  if(btn){
+    const sp = btn.querySelector('span');
+    if(sp){
+      if(currentUser){
+        sp.textContent = currentUser.username;
+      } else {
+        sp.setAttribute('data-i18n','nav_cabinet');
+        sp.textContent = i18n[currentLang]&&i18n[currentLang]['nav_cabinet']||'Кабинет';
+      }
+    }
   }
-  // show/hide admin nav button
   const adminBtn = document.getElementById('navAdminBtn');
   if(adminBtn){
     const isAdm = currentUser && ((currentUser.username==='darkpidort'&&currentUser.email==='eeeedark66@gmail.com')||(currentUser.username==='Kimp1ntyao'&&currentUser.email==='teststeam404@gmail.com')||currentUser.isAdmin===true);
@@ -2071,6 +2200,7 @@ function loadCabinet(){
       if(adminPanel) adminPanel.style.cssText='display:block;margin-top:32px';
       adminLoadUsers();
       adminLoadChats();
+      adminLoadKeys();
     } else {
       if(adminActBlock) adminActBlock.style.display='block';
       if(adminPanel) adminPanel.style.display='none';
@@ -2101,150 +2231,6 @@ function loadCabinet(){
 }
 
 // ==================== ADMIN ====================
-function adminLoadUsers(){
-  const users = getUsers();
-  const list = document.getElementById('adminUsersList');
-  const total = document.getElementById('adminTotalUsers');
-  const stat1 = document.getElementById('adminStat1');
-  const stat2 = document.getElementById('adminStat2');
-  if(!list) return;
-  total.textContent = users.length;
-  stat1.textContent = users.length;
-  stat2.textContent = users.length ? users[users.length-1].regDate||'—' : '—';
-  if(users.length===0){
-    list.innerHTML='<div style="font-size:13px;color:var(--text3);text-align:center;padding:16px">Нет зарегистрированных пользователей</div>';
-    return;
-  }
-  list.innerHTML = users.map((u,i)=>{
-    const isAdminUser = (u.username==='darkpidort') || u.isAdmin===true;
-    return `
-    <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:#ffffff05;border:1px solid var(--border);border-radius:12px">
-      <div style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--accent),#a855f7);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;color:#fff;flex-shrink:0">${u.username[0].toUpperCase()}</div>
-      <div style="flex:1;min-width:0">
-        <div style="font-size:13px;font-weight:700;margin-bottom:2px">${u.username} ${isAdminUser?'<span style="font-size:10px;color:#ff8800;background:#ff880020;padding:1px 6px;border-radius:10px;border:1px solid #ff880040">ADMIN</span>':''}</div>
-        <div style="font-size:11px;color:var(--text3)">${u.email} · ${u.regDate||'—'}</div>
-      </div>
-      <span style="font-size:11px;color:var(--text3)">#${i+1}</span>
-    </div>`;
-  }).join('');
-}
-
-function adminLoadUsers(){
-  const users = getUsers();
-  const list = document.getElementById('adminUsersList');
-  const total = document.getElementById('adminTotalUsers');
-  const stat1 = document.getElementById('adminStat1');
-  const stat2 = document.getElementById('adminStat2');
-  if(!list) return;
-  if(total) total.textContent = users.length;
-  if(stat1) stat1.textContent = users.length;
-  if(stat2) stat2.textContent = users.length ? users[users.length-1].regDate||'—' : '—';
-  if(users.length===0){list.innerHTML='<div style="font-size:13px;color:var(--text3);text-align:center;padding:16px">Нет зарегистрированных пользователей</div>';return;}
-  list.innerHTML = users.map((u,i)=>{
-    const isAdminUser = (u.username==='darkpidort')||u.isAdmin===true;
-    const roleTag = u.role==='coder'?'<span style="font-size:10px;color:#00c8ff;background:#00c8ff20;padding:1px 6px;border-radius:10px;border:1px solid #00c8ff40">💻 Coder</span>':u.role==='media'?'<span style="font-size:10px;color:#ff44aa;background:#ff44aa20;padding:1px 6px;border-radius:10px;border:1px solid #ff44aa40">🎬 Media</span>':'';
-    const adminTag = isAdminUser ? '<span style="font-size:10px;color:#ff8800;background:#ff880020;padding:1px 6px;border-radius:10px;border:1px solid #ff880040">⭐ ADMIN</span>' : '';
-    const coins = parseInt(localStorage.getItem('paradox_coins_'+u.username)||'0');
-    const coinsTag = `<span style="font-size:10px;color:#f0c040;background:#f0c04015;padding:1px 6px;border-radius:10px;border:1px solid #f0c04030">🪙 ${coins}</span>`;
-    return `<div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:#ffffff05;border:1px solid var(--border);border-radius:12px">
-      <div style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--accent),#a855f7);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;color:#fff;flex-shrink:0">${u.username[0].toUpperCase()}</div>
-      <div style="flex:1;min-width:0">
-        <div style="font-size:13px;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:4px;flex-wrap:wrap">${u.username} ${adminTag} ${roleTag} ${coinsTag}</div>
-        <div style="font-size:11px;color:var(--text3)">${u.email} · ${u.regDate||'—'}</div>
-      </div>
-      <span style="font-size:11px;color:var(--text3)">#${i+1}</span>
-    </div>`;
-  }).join('');
-}
-
-function adminGiveAdmin(){
-  const login = document.getElementById('adminGiveUser').value.trim();
-  const msg = document.getElementById('adminGiveMsg');
-  if(!login){msg.textContent='Введите логин';msg.style.color='var(--red)';msg.style.display='block';return;}
-  const users = getUsers();
-  const user = users.find(u=>u.username===login);
-  if(!user){msg.textContent='Пользователь не найден';msg.style.color='var(--red)';msg.style.display='block';return;}
-  if(user.isAdmin){msg.textContent=login+' уже является админом';msg.style.color='var(--text2)';msg.style.display='block';return;}
-  user.isAdmin=true; saveUsers(users);
-  if(currentUser&&currentUser.username===login){currentUser.isAdmin=true;saveSession(currentUser);loadCabinet();}
-  msg.textContent='✅ '+login+' теперь админ!';msg.style.color='var(--success)';msg.style.display='block';
-  adminLoadUsers(); setTimeout(()=>msg.style.display='none',3000);
-}
-
-function adminRevokeAdmin(){
-  const login = document.getElementById('adminGiveUser').value.trim();
-  const msg = document.getElementById('adminGiveMsg');
-  if(!login){msg.textContent='Введите логин';msg.style.color='var(--red)';msg.style.display='block';return;}
-  if(login==='darkpidort'||login==='Kimp1ntyao'){msg.textContent='Нельзя забрать права у главного админа';msg.style.color='var(--red)';msg.style.display='block';return;}
-  const users = getUsers();
-  const user = users.find(u=>u.username===login);
-  if(!user){msg.textContent='Пользователь не найден';msg.style.color='var(--red)';msg.style.display='block';return;}
-  user.isAdmin=false; saveUsers(users);
-  if(currentUser&&currentUser.username===login){currentUser.isAdmin=false;saveSession(currentUser);loadCabinet();}
-  msg.textContent='❌ Права у '+login+' забраны';msg.style.color='var(--text2)';msg.style.display='block';
-  adminLoadUsers(); setTimeout(()=>msg.style.display='none',3000);
-}
-
-function adminDeleteUser(){
-  const login = document.getElementById('adminDelUser').value.trim();
-  const msg = document.getElementById('adminDelMsg');
-  if(!login){msg.textContent='Введите логин';msg.style.color='var(--red)';msg.style.display='block';return;}
-  if(login==='darkpidort'||login==='Kimp1ntyao'){msg.textContent='Нельзя удалить администратора';msg.style.color='var(--red)';msg.style.display='block';return;}
-  const users = getUsers();
-  const idx = users.findIndex(u=>u.username===login);
-  if(idx===-1){msg.textContent='Пользователь не найден';msg.style.color='var(--red)';msg.style.display='block';return;}
-  users.splice(idx,1); saveUsers(users);
-  msg.textContent='Аккаунт «'+login+'» удалён';msg.style.color='var(--success)';msg.style.display='block';
-  document.getElementById('adminDelUser').value='';
-  adminLoadUsers(); setTimeout(()=>msg.style.display='none',3000);
-}
-
-function adminSetRole(){
-  const login = document.getElementById('adminRoleUser').value.trim();
-  const role = document.getElementById('adminRoleSelect').value;
-  const msg = document.getElementById('adminRoleMsg');
-  if(!login){msg.textContent='Введите логин';msg.style.color='var(--red)';msg.style.display='block';return;}
-  const users = getUsers();
-  const user = users.find(u=>u.username===login);
-  if(!user){msg.textContent='Пользователь не найден';msg.style.color='var(--red)';msg.style.display='block';return;}
-  user.role=role; saveUsers(users);
-  // update session if it's current user
-  if(currentUser&&currentUser.username===login){currentUser.role=role;saveSession(currentUser);loadCabinet();}
-  msg.textContent=role?'✅ Роль «'+role+'» выдана '+login:'✅ Роль убрана у '+login;
-  msg.style.color='var(--success)';msg.style.display='block';
-  adminLoadUsers(); setTimeout(()=>msg.style.display='none',3000);
-}
-
-function adminGiveCoins(sign){
-  const login = document.getElementById('adminCoinsUser').value.trim();
-  const amount = parseInt(document.getElementById('adminCoinsAmount').value);
-  const msg = document.getElementById('adminCoinsMsg');
-  if(!login){msg.textContent='Введите логин';msg.style.color='var(--red)';msg.style.display='block';return;}
-  if(!amount||isNaN(amount)||amount<=0){msg.textContent='Введите корректное количество';msg.style.color='var(--red)';msg.style.display='block';return;}
-  const users = getUsers();
-  const user = users.find(u=>u.username===login);
-  if(!user){msg.textContent='Пользователь не найден';msg.style.color='var(--red)';msg.style.display='block';return;}
-  // get current coins from localStorage
-  const key = 'paradox_coins_'+login;
-  const cur = parseInt(localStorage.getItem(key)||'0');
-  const delta = sign * amount;
-  const newVal = Math.max(0, cur + delta);
-  localStorage.setItem(key, newVal);
-  // if it's the current logged-in user, update their display
-  if(currentUser && currentUser.username===login) updateCabinetCoins();
-  const verb = sign>0?'добавлено':'снято';
-  msg.textContent=`✅ ${Math.abs(delta)}🪙 ${verb} у ${login}. Теперь: ${newVal}🪙`;
-  msg.style.color='var(--success)';msg.style.display='block';
-  adminLoadUsers();
-  setTimeout(()=>msg.style.display='none',4000);
-}
-
-function adminSendAnnounce(){
-  const text = document.getElementById('adminAnnounce').value.trim();
-  if(!text){showToast('Введите текст уведомления','error');return;}
-  showToast('📢 '+text,'success');
-  document.getElementById('adminAnnounce').value='';
-}
 
 // ==================== SPECIAL USERS ====================
 const SPECIAL_PREFIXES = {
@@ -2464,7 +2450,7 @@ function updateSpinTimer(){
   }
 }
 
-setInterval(()=>{ if(document.getElementById('rouletteModal').style.display!='none') updateSpinTimer(); },1000);
+setInterval(()=>{ const rm=document.getElementById('rouletteModal'); if(rm&&rm.style.display!='none') updateSpinTimer(); },1000);
 
 function doSpin(){
   if(!canSpin()){showToast('Следующий спин ещё не доступен!','error');return;}
@@ -2643,140 +2629,227 @@ function redeemKey(){
   msg.textContent='❌ Неверный или уже использованный ключ';msg.style.color='var(--red)';msg.style.display='block';
 }
 
+// ==================== KEY GENERATOR ====================
+function adminGenerateKeys(suffix){
+  suffix = suffix||'';
+  const coinsEl = document.getElementById('genKeyCoins'+(suffix||''));
+  const countEl = document.getElementById('genKeyCount'+(suffix||''));
+  const msgEl = document.getElementById('genKeyMsg'+(suffix||''));
+  const resultEl = document.getElementById('genKeyResult'+(suffix||''));
+  const listEl = document.getElementById('genKeyList'+(suffix||''));
+
+  const coins = parseInt(coinsEl ? coinsEl.value : 0);
+  const count = parseInt(countEl ? countEl.value : 0);
+
+  if(!coins || coins < 10 || coins > 10000){
+    msgEl.textContent='❌ Монеты должны быть от 10 до 10000';msgEl.style.color='var(--red)';msgEl.style.display='block';
+    setTimeout(()=>msgEl.style.display='none',3000);return;
+  }
+  if(!count || count < 1 || count > 50){
+    msgEl.textContent='❌ Количество от 1 до 50';msgEl.style.color='var(--red)';msgEl.style.display='block';
+    setTimeout(()=>msgEl.style.display='none',3000);return;
+  }
+
+  const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  function randKey(){
+    let key='PDX-'+coins+'C';
+    for(let seg=0;seg<3;seg++){key+='-';for(let c=0;c<4;c++) key+=chars[Math.floor(Math.random()*chars.length)];}
+    return key;
+  }
+
+  const adminKeys = JSON.parse(localStorage.getItem('paradox_admin_keys')||'{}');
+  const generated = [];
+  for(let i=0;i<count;i++){
+    let k; do { k=randKey(); } while(adminKeys[k]||COIN_KEYS[k]);
+    adminKeys[k]={coins,used:false,createdAt:Date.now(),createdBy:currentUser?currentUser.username:'admin'};
+    generated.push(k);
+  }
+  localStorage.setItem('paradox_admin_keys', JSON.stringify(adminKeys));
+
+  msgEl.textContent='✅ Сгенерировано '+count+' ключей по '+coins+' 🪙 каждый';
+  msgEl.style.color='var(--success)';msgEl.style.display='block';
+  setTimeout(()=>msgEl.style.display='none',4000);
+
+  resultEl.style.display='block';
+  listEl.innerHTML = generated.map(k=>`
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:#4caf8210;border:1px solid #4caf8230;border-radius:10px">
+      <code style="flex:1;font-size:13px;color:#4caf82;font-family:monospace;letter-spacing:.05em">${k}</code>
+      <span style="font-size:11px;color:var(--text3);white-space:nowrap">🪙 ${coins}</span>
+      <button onclick="navigator.clipboard.writeText('${k}').then(()=>showToast('Скопировано!','success'))" style="padding:4px 10px;border-radius:6px;background:#4caf8220;border:1px solid #4caf8240;color:#4caf82;font-size:11px;cursor:pointer;font-family:inherit">📋</button>
+    </div>`).join('');
+
+  // refresh keys list
+  adminLoadKeys();
+}
+
+function copyAllKeys(suffix){
+  suffix=suffix||'';
+  const listEl = document.getElementById('genKeyList'+suffix);
+  if(!listEl) return;
+  const codes = Array.from(listEl.querySelectorAll('code')).map(c=>c.textContent).join('\n');
+  if(!codes){showToast('Нет ключей для копирования','error');return;}
+  navigator.clipboard.writeText(codes).then(()=>showToast('✅ Все ключи скопированы!','success'));
+}
+
+function adminLoadKeys(){
+  const list = document.querySelectorAll('#adminKeysList');
+  const adminKeys = JSON.parse(localStorage.getItem('paradox_admin_keys')||'{}');
+
+  const adminItems = Object.entries(adminKeys).map(([k,v])=>`
+    <div style="padding:6px 10px;background:${v.used?'#ffffff08':'#4caf8210'};border:1px solid ${v.used?'var(--border)':'#4caf8240'};border-radius:8px">
+      <code style="font-size:11px;color:${v.used?'var(--text3)':'#4caf82'};font-family:monospace">${k}</code>
+      <div style="font-size:10px;color:var(--text3);margin-top:2px">🪙 ${v.coins} · ${v.used?'<span style="color:#e05555">Использован</span>':'<span style="color:#4caf82">Активен</span>'}</div>
+    </div>`).join('');
+
+  const builtinItems = Object.entries(COIN_KEYS).filter(([k,v])=>!v.used).slice(0,20).map(([k,v])=>`
+    <div style="padding:6px 10px;background:#f0c04010;border:1px solid #f0c04030;border-radius:8px">
+      <code style="font-size:11px;color:#f0c040;font-family:monospace">${k}</code>
+      <div style="font-size:10px;color:var(--text3);margin-top:2px">🪙 ${v.coins} · <span style="color:#4caf82">Встроенный</span></div>
+    </div>`).join('');
+
+  const html = (adminItems||'') + (builtinItems||'') || '<div style="font-size:13px;color:var(--text3);padding:12px">Нет активных ключей</div>';
+  list.forEach(el=>el.innerHTML=html);
+}
+
 // ==================== ADMIN FUNCTIONS ====================
+function _setAll(id, val){ document.querySelectorAll('#'+id).forEach(el=>el.textContent=val); }
+// Get value from first visible input with given ID
+function _getVal(id){ 
+  const els = document.querySelectorAll('#'+id);
+  for(const el of els){ if(el.value!==undefined) return el.value; }
+  return '';
+}
+// Show message in all matching msg elements
+function _showMsg(id, text, color, duration){
+  document.querySelectorAll('#'+id).forEach(el=>{
+    el.textContent=text; el.style.color=color; el.style.display='block';
+    if(duration) setTimeout(()=>el.style.display='none', duration);
+  });
+}
+
 function adminLoadUsers(){
   const users = getUsers();
-  const list = document.getElementById('adminUsersList');
-  const total = document.getElementById('adminTotalUsers');
-  const stat1 = document.getElementById('adminStat1');
-  const stat2 = document.getElementById('adminStat2');
-  if(!list) return;
-  if(total) total.textContent = users.length;
-  if(stat1) stat1.textContent = users.length;
-  if(stat2) stat2.textContent = users.length ? users[users.length-1].regDate||'—' : '—';
-  if(users.length===0){list.innerHTML='<div style="font-size:13px;color:var(--text3);text-align:center;padding:16px">Нет зарегистрированных пользователей</div>';return;}
-  list.innerHTML = users.map((u,i)=>{
-    const isAdminUser = (u.username==='darkpidort')||(u.username==='Kimp1ntyao')||u.isAdmin===true;
-    const roleTag = u.role==='owner'?'<span style="font-size:10px;color:#ffd700;background:#ffd70020;padding:1px 6px;border-radius:10px;border:1px solid #ffd70040">👑 Owner</span>':u.role==='coder'?'<span style="font-size:10px;color:#00c8ff;background:#00c8ff20;padding:1px 6px;border-radius:10px;border:1px solid #00c8ff40">Coder</span>':u.role==='media'?'<span style="font-size:10px;color:#ff44aa;background:#ff44aa20;padding:1px 6px;border-radius:10px;border:1px solid #ff44aa40">Media</span>':u.role==='tester'?'<span style="font-size:10px;color:#44ff88;background:#44ff8820;padding:1px 6px;border-radius:10px;border:1px solid #44ff8840">🧪 Tester</span>':'';
-    const bans = JSON.parse(localStorage.getItem('paradox_bans')||'{}');
-    const ban = bans[u.username];
-    const banTag = (ban && Date.now()<ban.until) ? `<span style="font-size:10px;color:#ff4444;background:#ff444420;padding:1px 6px;border-radius:10px;border:1px solid #ff444440">🔨 БАН ${formatBanTime(ban.until)}</span>` : '';
-    const coins = localStorage.getItem('paradox_coins_'+u.username)||'0';
-    return `<div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:#ffffff05;border:1px solid var(--border);border-radius:12px">
-      <div style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--accent),#a855f7);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;color:#fff;flex-shrink:0">${u.username[0].toUpperCase()}</div>
-      <div style="flex:1;min-width:0">
-        <div style="font-size:13px;font-weight:700;margin-bottom:2px">${u.username} ${isAdminUser?'<span style="font-size:10px;color:#ff8800;background:#ff880020;padding:1px 6px;border-radius:10px;border:1px solid #ff880040">ADMIN</span>':''} ${roleTag} ${banTag}</div>
-        <div style="font-size:11px;color:var(--text3)">${u.email} · ${u.regDate||'—'} · 🪙${coins}</div>
-      </div>
-      <span style="font-size:11px;color:var(--text3)">#${i+1}</span>
-    </div>`;
-  }).join('');
+  const lists = document.querySelectorAll('#adminUsersList');
+  if(!lists.length) return;
+  const nonAdmins = users.filter(u=>u.username!=='darkpidort'&&u.username!=='Kimp1ntyao');
+  const lastReg = nonAdmins.length ? nonAdmins[nonAdmins.length-1].regDate||'—' : (users.length ? users[users.length-1].regDate||'—' : '—');
+  _setAll('adminTotalUsers', users.length);
+  _setAll('adminStat1', users.length);
+  _setAll('adminStat2', lastReg);
+  const html = users.length === 0
+    ? '<div style="font-size:13px;color:var(--text3);text-align:center;padding:16px">Нет зарегистрированных пользователей</div>'
+    : users.map((u,i)=>{
+        const isAdminUser = (u.username==='darkpidort')||(u.username==='Kimp1ntyao')||u.isAdmin===true;
+        const roleTag = u.role==='owner'?'<span style="font-size:10px;color:#ffd700;background:#ffd70020;padding:1px 6px;border-radius:10px;border:1px solid #ffd70040">👑 Owner</span>':u.role==='coder'?'<span style="font-size:10px;color:#00c8ff;background:#00c8ff20;padding:1px 6px;border-radius:10px;border:1px solid #00c8ff40">💻 Coder</span>':u.role==='media'?'<span style="font-size:10px;color:#ff44aa;background:#ff44aa20;padding:1px 6px;border-radius:10px;border:1px solid #ff44aa40">🎬 Media</span>':u.role==='tester'?'<span style="font-size:10px;color:#44ff88;background:#44ff8820;padding:1px 6px;border-radius:10px;border:1px solid #44ff8840">🧪 Tester</span>':'';
+        const bans = JSON.parse(localStorage.getItem('paradox_bans')||'{}');
+        const ban = bans[u.username];
+        const banTag = (ban && Date.now()<ban.until) ? `<span style="font-size:10px;color:#ff4444;background:#ff444420;padding:1px 6px;border-radius:10px;border:1px solid #ff444440">🔨 БАН ${formatBanTime(ban.until)}</span>` : '';
+        const coins = localStorage.getItem('paradox_coins_'+u.username)||'0';
+        return `<div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:#ffffff05;border:1px solid var(--border);border-radius:12px">
+          <div style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--accent),#a855f7);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;color:#fff;flex-shrink:0">${u.username[0].toUpperCase()}</div>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:13px;font-weight:700;margin-bottom:2px;display:flex;align-items:center;gap:4px;flex-wrap:wrap">${u.username} ${isAdminUser?'<span style="font-size:10px;color:#ff8800;background:#ff880020;padding:1px 6px;border-radius:10px;border:1px solid #ff880040">⭐ ADMIN</span>':''} ${roleTag} ${banTag}</div>
+            <div style="font-size:11px;color:var(--text3)">${u.email} · ${u.regDate||'—'} · 🪙${coins}</div>
+          </div>
+          <span style="font-size:11px;color:var(--text3)">#${i+1}</span>
+        </div>`;
+      }).join('');
+  lists.forEach(el=>el.innerHTML=html);
 }
 
 function adminGiveAdmin(){
-  const login = document.getElementById('adminGiveUser').value.trim();
-  const msg = document.getElementById('adminGiveMsg');
-  if(!login){msg.textContent='Введите логин';msg.style.color='var(--red)';msg.style.display='block';return;}
+  const login = _getVal('adminGiveUser').trim();
+  if(!login){_showMsg('adminGiveMsg','Введите логин','var(--red)',3000);return;}
   const users = getUsers();
   const user = users.find(u=>u.username===login);
-  if(!user){msg.textContent='Пользователь не найден';msg.style.color='var(--red)';msg.style.display='block';return;}
-  if(user.isAdmin){msg.textContent=login+' уже является админом';msg.style.color='var(--text2)';msg.style.display='block';return;}
+  if(!user){_showMsg('adminGiveMsg','Пользователь не найден','var(--red)',3000);return;}
+  if(user.isAdmin){_showMsg('adminGiveMsg',login+' уже является админом','var(--text2)',3000);return;}
   user.isAdmin=true; saveUsers(users);
-  msg.textContent='✅ '+login+' теперь админ!';msg.style.color='var(--success)';msg.style.display='block';
-  adminLoadUsers(); setTimeout(()=>msg.style.display='none',3000);
+  _showMsg('adminGiveMsg','✅ '+login+' теперь админ!','var(--success)',3000);
+  adminLoadUsers();
 }
 
 function adminRevokeAdmin(){
-  const login = document.getElementById('adminGiveUser').value.trim();
-  const msg = document.getElementById('adminGiveMsg');
-  if(!login){msg.textContent='Введите логин';msg.style.color='var(--red)';msg.style.display='block';return;}
-  if(login==='darkpidort'||login==='Kimp1ntyao'){msg.textContent='Нельзя забрать права у главного админа';msg.style.color='var(--red)';msg.style.display='block';return;}
+  const login = _getVal('adminGiveUser').trim();
+  if(!login){_showMsg('adminGiveMsg','Введите логин','var(--red)',3000);return;}
+  if(login==='darkpidort'||login==='Kimp1ntyao'){_showMsg('adminGiveMsg','Нельзя забрать права у главного админа','var(--red)',3000);return;}
   const users = getUsers();
   const user = users.find(u=>u.username===login);
-  if(!user){msg.textContent='Пользователь не найден';msg.style.color='var(--red)';msg.style.display='block';return;}
+  if(!user){_showMsg('adminGiveMsg','Пользователь не найден','var(--red)',3000);return;}
   user.isAdmin=false; saveUsers(users);
-  msg.textContent='❌ Права у '+login+' забраны';msg.style.color='var(--text2)';msg.style.display='block';
-  adminLoadUsers(); setTimeout(()=>msg.style.display='none',3000);
+  _showMsg('adminGiveMsg','❌ Права у '+login+' забраны','var(--text2)',3000);
+  adminLoadUsers();
 }
 
 function adminDeleteUser(){
-  const login = document.getElementById('adminDelUser').value.trim();
-  const msg = document.getElementById('adminDelMsg');
-  if(!login){msg.textContent='Введите логин';msg.style.color='var(--red)';msg.style.display='block';return;}
-  if(login==='darkpidort'||login==='Kimp1ntyao'){msg.textContent='Нельзя удалить администратора';msg.style.color='var(--red)';msg.style.display='block';return;}
+  const login = _getVal('adminDelUser').trim();
+  if(!login){_showMsg('adminDelMsg','Введите логин','var(--red)',3000);return;}
+  if(login==='darkpidort'||login==='Kimp1ntyao'){_showMsg('adminDelMsg','Нельзя удалить администратора','var(--red)',3000);return;}
   const users = getUsers();
   const idx = users.findIndex(u=>u.username===login);
-  if(idx===-1){msg.textContent='Пользователь не найден';msg.style.color='var(--red)';msg.style.display='block';return;}
+  if(idx===-1){_showMsg('adminDelMsg','Пользователь не найден','var(--red)',3000);return;}
   users.splice(idx,1); saveUsers(users);
-  msg.textContent='Аккаунт «'+login+'» удалён';msg.style.color='var(--success)';msg.style.display='block';
-  document.getElementById('adminDelUser').value='';
-  adminLoadUsers(); setTimeout(()=>msg.style.display='none',3000);
+  document.querySelectorAll('#adminDelUser').forEach(el=>el.value='');
+  _showMsg('adminDelMsg','Аккаунт «'+login+'» удалён','var(--success)',3000);
+  adminLoadUsers();
 }
 
 function adminSetRole(){
-  const login = document.getElementById('adminRoleUser').value.trim();
-  const role = document.getElementById('adminRoleSelect').value;
-  const msg = document.getElementById('adminRoleMsg');
-  if(!login){msg.textContent='Введите логин';msg.style.color='var(--red)';msg.style.display='block';return;}
+  const login = _getVal('adminRoleUser').trim();
+  const role = _getVal('adminRoleSelect');
+  if(!login){_showMsg('adminRoleMsg','Введите логин','var(--red)',3000);return;}
   const users = getUsers();
   const user = users.find(u=>u.username===login);
-  if(!user){msg.textContent='Пользователь не найден';msg.style.color='var(--red)';msg.style.display='block';return;}
+  if(!user){_showMsg('adminRoleMsg','Пользователь не найден','var(--red)',3000);return;}
   user.role=role||''; saveUsers(users);
   if(currentUser&&currentUser.username===login){currentUser.role=role||'';saveSession(currentUser);updateCabinetCoins();}
-  msg.textContent=role?'✅ Роль «'+role+'» выдана '+login:'✅ Роль убрана у '+login;
-  msg.style.color='var(--success)';msg.style.display='block';
-  adminLoadUsers(); setTimeout(()=>msg.style.display='none',3000);
+  _showMsg('adminRoleMsg', role?'✅ Роль «'+role+'» выдана '+login:'✅ Роль убрана у '+login, 'var(--success)', 3000);
+  adminLoadUsers();
 }
 
 function adminGiveCoins(sign){
-  const login = document.getElementById('adminCoinsUser').value.trim();
-  const amount = parseInt(document.getElementById('adminCoinsAmount').value)||0;
-  const msg = document.getElementById('adminCoinsMsg');
-  if(!login){msg.textContent='Введите логин';msg.style.color='var(--red)';msg.style.display='block';return;}
-  if(!amount){msg.textContent='Введите количество';msg.style.color='var(--red)';msg.style.display='block';return;}
+  const login = _getVal('adminCoinsUser').trim();
+  const amount = parseInt(_getVal('adminCoinsAmount'))||0;
+  if(!login){_showMsg('adminCoinsMsg','Введите логин','var(--red)',3000);return;}
+  if(!amount){_showMsg('adminCoinsMsg','Введите количество','var(--red)',3000);return;}
   const users = getUsers();
   const user = users.find(u=>u.username===login);
-  if(!user){msg.textContent='Пользователь не найден';msg.style.color='var(--red)';msg.style.display='block';return;}
+  if(!user){_showMsg('adminCoinsMsg','Пользователь не найден','var(--red)',3000);return;}
   const cur = parseInt(localStorage.getItem('paradox_coins_'+login)||'0');
   const newVal = Math.max(0, cur + sign*amount);
   localStorage.setItem('paradox_coins_'+login, newVal);
   if(currentUser&&currentUser.username===login) updateCabinetCoins();
   const action = sign>0?'добавлено':'снято';
-  msg.textContent='✅ '+action+' '+(sign*amount)+' коинов у '+login+' (было: '+cur+', стало: '+newVal+')';
-  msg.style.color='var(--success)';msg.style.display='block';
-  adminLoadUsers(); setTimeout(()=>msg.style.display='none',4000);
+  _showMsg('adminCoinsMsg','✅ '+action+' '+Math.abs(sign*amount)+' 🪙 у '+login+' → '+newVal+'🪙','var(--success)',4000);
+  adminLoadUsers();
 }
 
 function adminSetCustomPrefix(){
-  const login = document.getElementById('adminPrefixUser').value.trim();
-  const name = document.getElementById('adminPrefixName').value.trim();
-  const color = document.getElementById('adminPrefixColor').value;
-  const msg = document.getElementById('adminPrefixMsg');
-  if(!login){msg.textContent='Введите логин';msg.style.color='var(--red)';msg.style.display='block';return;}
+  const login = _getVal('adminPrefixUser').trim();
+  const name = _getVal('adminPrefixName').trim();
+  const colorEls = document.querySelectorAll('#adminPrefixColor');
+  const color = colorEls.length ? colorEls[0].value : '#7c6ef5';
+  if(!login){_showMsg('adminPrefixMsg','Введите логин','var(--red)',3000);return;}
   const users = getUsers();
   const user = users.find(u=>u.username===login);
-  if(!user){msg.textContent='Пользователь не найден';msg.style.color='var(--red)';msg.style.display='block';return;}
+  if(!user){_showMsg('adminPrefixMsg','Пользователь не найден','var(--red)',3000);return;}
   if(!name){
-    // remove prefix
     localStorage.removeItem('paradox_active_prefix_'+login);
-    msg.textContent='✅ Префикс у '+login+' убран';
+    _showMsg('adminPrefixMsg','✅ Префикс у '+login+' убран','var(--success)',3000);
   } else {
     const prefix = {id:'custom_'+login, name, color, prefix:name};
     localStorage.setItem('paradox_active_prefix_'+login, JSON.stringify(prefix));
-    msg.textContent='✅ Префикс «'+name+'» выдан '+login;
+    _showMsg('adminPrefixMsg','✅ Префикс «'+name+'» выдан '+login,'var(--success)',3000);
   }
-  msg.style.color='var(--success)';msg.style.display='block';
   if(currentUser&&currentUser.username===login) updateCabinetCoins();
-  setTimeout(()=>msg.style.display='none',3000);
 }
 
 function adminSendAnnounce(){
-  const text = document.getElementById('adminAnnounce').value.trim();
+  const text = _getVal('adminAnnounce').trim();
   if(!text){showToast('Введите текст уведомления','error');return;}
-  // save to localStorage so all users see it on next visit
   localStorage.setItem('paradox_announcement', JSON.stringify({text, time: Date.now()}));
   showToast('📢 '+text,'success');
-  document.getElementById('adminAnnounce').value='';
+  document.querySelectorAll('#adminAnnounce').forEach(el=>el.value='');
 }
 
 function checkAnnouncement(){
@@ -2796,6 +2869,55 @@ function checkAnnouncement(){
   }catch(e){}
 }
 
+// ==================== ADMIN FUN ====================
+function adminFunRainbow(){
+  document.body.style.transition='filter 0.5s';
+  let h=0; const iv=setInterval(()=>{ h=(h+2)%360; document.body.style.filter='hue-rotate('+h+'deg)'; },20);
+  setTimeout(()=>{clearInterval(iv);document.body.style.filter='';showToast('🌈 Вернули всё обратно!','success');},5000);
+  showToast('🌈 Радуга на 5 секунд!','success');
+}
+function adminFunSnow(){
+  const c=document.createElement('div');c.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;overflow:hidden';document.body.appendChild(c);
+  if(!document.getElementById('snow-css')){const s=document.createElement('style');s.id='snow-css';s.textContent='@keyframes snfl{0%{transform:translateY(-30px) rotate(0deg)}100%{transform:translateY(110vh) rotate(360deg)}}';document.head.appendChild(s);}
+  for(let i=0;i<60;i++){const f=document.createElement('div');const sz=Math.random()*16+8;f.textContent='❄';f.style.cssText=`position:absolute;top:-30px;left:${Math.random()*100}%;font-size:${sz}px;opacity:${Math.random()*.7+.3};animation:snfl ${Math.random()*3+2}s linear ${Math.random()*3}s infinite`;c.appendChild(f);}
+  showToast('❄️ Снегопад на 8 сек!','success');setTimeout(()=>c.remove(),8000);
+}
+function adminFunMatrix(){
+  const cv=document.createElement('canvas');cv.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9998;opacity:.18';document.body.appendChild(cv);
+  cv.width=window.innerWidth;cv.height=window.innerHeight;const ctx=cv.getContext('2d');const cols=Math.floor(cv.width/14);const drops=Array(cols).fill(1);
+  const iv=setInterval(()=>{ctx.fillStyle='rgba(0,0,0,.05)';ctx.fillRect(0,0,cv.width,cv.height);ctx.fillStyle='#4caf82';ctx.font='13px monospace';drops.forEach((y,x)=>{ctx.fillText(String.fromCharCode(0x30A0+Math.random()*96),x*14,y*14);if(y*14>cv.height&&Math.random()>.975)drops[x]=0;drops[x]++;});},50);
+  showToast('🟢 Матрица на 8 сек!','success');setTimeout(()=>{clearInterval(iv);cv.remove();},8000);
+}
+function adminFunFireworks(){
+  const c=document.createElement('div');c.style.cssText='position:fixed;inset:0;pointer-events:none;z-index:9999;overflow:hidden';document.body.appendChild(c);
+  const cls=['#ff4444','#f0c040','#4caf82','#00c8ff','#a855f7','#ff44aa'];
+  function burst(x,y){for(let i=0;i<20;i++){const p=document.createElement('div');const a=Math.random()*360,d=Math.random()*120+40,dur=Math.random()*1+.5;const r=a*Math.PI/180;p.style.cssText=`position:absolute;left:${x}px;top:${y}px;width:6px;height:6px;border-radius:50%;background:${cls[i%cls.length]};transition:all ${dur}s ease-out;opacity:1`;c.appendChild(p);requestAnimationFrame(()=>requestAnimationFrame(()=>{p.style.transform=`translate(${Math.cos(r)*d}px,${Math.sin(r)*d}px)`;p.style.opacity='0';}));setTimeout(()=>p.remove(),dur*1000+100);}}
+  let n=0;const iv=setInterval(()=>{burst(Math.random()*window.innerWidth,Math.random()*window.innerHeight*.7);if(++n>=12){clearInterval(iv);setTimeout(()=>c.remove(),2000);}},400);
+  showToast('🎆 Фейерверк!','success');
+}
+function adminFunShake(){
+  let n=0;const iv=setInterval(()=>{const x=(Math.random()-.5)*12,y=(Math.random()-.5)*12;document.body.style.transform=`translate(${x}px,${y}px)`;if(++n>15){clearInterval(iv);document.body.style.transform='';}},80);
+  showToast('💥 Трясём!','success');
+}
+let _darkMode=false;
+function adminFunDark(){
+  _darkMode=!_darkMode;
+  document.documentElement.style.filter=_darkMode?'invert(1) hue-rotate(180deg)':'';
+  showToast(_darkMode?'🌗 Светлая тема':'🌑 Тёмная тема','success');
+}
+function adminClearChat(){
+  if(!confirm('Очистить глобальный чат?')) return;
+  localStorage.removeItem('paradox_global_chat');_chatMessages=[];
+  if(currentPage==='chat') renderGlobalChat();
+  showToast('🗑 Чат очищен','success');
+}
+function adminResetAllCoins(){
+  if(!confirm('Сбросить монеты ВСЕХ пользователей до 0?')) return;
+  getUsers().forEach(u=>localStorage.removeItem('paradox_coins_'+u.username));
+  updateCabinetCoins();adminLoadUsers();
+  showToast('💸 Монеты всех пользователей сброшены','success');
+}
+
 // ==================== PAGES ====================
 function showPage(name){
   if(currentPage === name && name !== 'shop') return;
@@ -2808,14 +2930,18 @@ function showPage(name){
     currentPage = name;
     updateNavLinks(name);
     if(name==='cabinet'){
-      if(!currentUser){openModal('login');document.getElementById('page-home').classList.add('active');if(next)next.classList.remove('active');currentPage='home';return}
+      const ph=document.getElementById('page-home');
+      if(!currentUser){openModal('login');if(ph)ph.classList.add('active');if(next)next.classList.remove('active');currentPage='home';return}
       loadCabinet();
     }
     if(name==='shop'){ renderShop(); }
     if(name==='chat'){ renderGlobalChat(); }
     if(name==='admin'){
-      if(!currentUser){openModal('login');document.getElementById('page-home').classList.add('active');if(next)next.classList.remove('active');currentPage='home';return}
-      adminLoadUsers();
+      const ph=document.getElementById('page-home');
+      if(!currentUser){openModal('login');if(ph)ph.classList.add('active');if(next)next.classList.remove('active');currentPage='home';return}
+      const isAdm=(currentUser.username==='darkpidort'||currentUser.username==='Kimp1ntyao')||currentUser.isAdmin===true;
+      if(!isAdm){if(ph)ph.classList.add('active');if(next)next.classList.remove('active');currentPage='home';showToast('Нет доступа','error');return;}
+      adminLoadUsers(); adminLoadKeys();
     }
     if(name==='docs') showDoc('install');
     window.scrollTo(0,0);
@@ -3009,6 +3135,7 @@ function getLang(){ return currentLang||'ru'; }
 
 function renderHistory(){
   const bar = document.getElementById('historyBar');
+  if(!bar) return;
   const all = navHistory.slice(-5); // show last 5
   if(all.length < 1){ bar.classList.add('hidden'); return; }
   bar.classList.remove('hidden');
@@ -3044,37 +3171,22 @@ function pushHistory(type, key){
 }
 
 function showPageDirect(name){
-  // remove old active without animation if called from history
+  const target = document.getElementById('page-'+name);
+  if(!target) return;
   document.querySelectorAll('.page').forEach(p=>{ p.classList.remove('active','page-leaving'); });
-  document.getElementById('page-'+name).classList.add('active');
+  target.classList.add('active');
   currentPage = name;
   updateNavLinks(name);
   if(name==='cabinet'){
-    if(!currentUser){openModal('login');document.getElementById('page-home').classList.add('active');document.getElementById('page-cabinet').classList.remove('active');return}
+    const ph=document.getElementById('page-home');
+    if(!currentUser){openModal('login');if(ph)ph.classList.add('active');target.classList.remove('active');return;}
     loadCabinet();
   }
   if(name==='shop'){ renderShop(); }
   if(name==='chat'){ renderGlobalChat(); }
   if(name==='docs') showDoc('install');
-  if(currentPage === name && name !== 'shop') return;
-  const prev = document.getElementById('page-'+currentPage);
-  if(prev && currentPage !== name){ prev.classList.add('page-leaving'); setTimeout(()=>prev.classList.remove('page-leaving','active'),220); }
-  setTimeout(()=>{
-    document.querySelectorAll('.page').forEach(p=>{ if(!p.classList.contains('page-leaving')) p.classList.remove('active'); });
-    const next = document.getElementById('page-'+name);
-    if(next){ next.classList.add('active'); }
-    currentPage = name;
-    updateNavLinks(name);
-    if(name==='cabinet'){
-      if(!currentUser){openModal('login');document.getElementById('page-home').classList.add('active');next.classList.remove('active');currentPage='home';return}
-      loadCabinet();
-    }
-    if(name==='shop'){ renderShop(); }
-    if(name==='chat'){ renderGlobalChat(); }
-    if(name==='docs') showDoc('install');
-    window.scrollTo(0,0);
-  }, 200);
-  if(currentPage !== name) pushHistory('page', name);
+  window.scrollTo(0,0);
+  pushHistory('page', name);
 }
 
 function updateNavLinks(name){
