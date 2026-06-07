@@ -375,6 +375,10 @@ footer{border-top:1px solid var(--border);padding:60px 20px 30px;max-width:1200p
     <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="5" r="2.5"/><path d="M3 13c0-2.761 2.239-5 5-5s5 2.239 5 5"/></svg>
     <span data-i18n="nav_cabinet">Кабинет</span>
   </button>
+  <button id="navAdminBtn" onclick="showPage('admin')" style="display:none;align-items:center;gap:6px;padding:8px 16px;border-radius:40px;background:#ff440022;border:1px solid #ff440055;color:#ff6666;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:.2s;margin-left:4px">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M8 2l1.5 3.5L13 6l-2.5 2.5.5 3.5L8 10.5 5 12l.5-3.5L3 6l3.5-.5z"/></svg>
+    ADMIN
+  </button>
 </nav>
 
 <!-- HOME PAGE -->
@@ -642,7 +646,7 @@ footer{border-top:1px solid var(--border);padding:60px 20px 30px;max-width:1200p
       </div>
       <div class="cabinet-card">
         <h3 data-i18n="cab_subscription">ПОДПИСКА</h3>
-        <div class="stat-row"><span class="stat-label" data-i18n="cab_plan">Текущий план</span><span class="stat-value green" data-i18n="plan_free">Free</span></div>
+        <div class="stat-row"><span class="stat-label" data-i18n="cab_plan">Текущий план</span><span class="stat-value green" id="cabPlanDisplay">Free</span></div>
         <div class="stat-row"><span class="stat-label" data-i18n="cab_expires">Истекает</span><span class="stat-value" data-i18n="cab_never">Никогда</span></div>
         <div class="stat-row"><span class="stat-label" data-i18n="cab_modules">Активных модулей</span><span class="stat-value">3</span></div>
         <div style="margin-top:16px">
@@ -669,6 +673,20 @@ footer{border-top:1px solid var(--border);padding:60px 20px 30px;max-width:1200p
           <span data-i18n="btn_download">Скачать (~10 МБ)</span>
         </button>
       </div>
+
+      <!-- КЛЮЧИ -->
+      <div class="cabinet-card" style="grid-column:1/-1">
+        <h3 style="margin-bottom:16px">🔑 АКТИВИРОВАТЬ КЛЮЧ</h3>
+        <p style="font-size:13px;color:var(--text3);margin-bottom:14px">Введите ключ для получения коинов</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <div class="input-wrap" style="flex:1;min-width:220px">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M11 4a3 3 0 010 6H6l-1 1-1-1-1 1-1-1V9H2a1 1 0 010-6h9z"/><circle cx="12" cy="7" r="1" fill="currentColor"/></svg>
+            <input class="form-input" id="keyInput" type="text" placeholder="XXXX-XXXX-XXXX-XXXX">
+          </div>
+          <button class="btn-submit" style="margin-top:0;padding:0 24px" onclick="redeemKey()">Активировать</button>
+        </div>
+        <div id="keyMsg" style="font-size:13px;margin-top:10px;display:none"></div>
+      </div>
     </div>
 
     <!-- ADMIN PANEL (только для darkpidort) -->
@@ -685,6 +703,28 @@ footer{border-top:1px solid var(--border);padding:60px 20px 30px;max-width:1200p
           <h3 style="color:#ff6666;margin-bottom:16px">👥 ВСЕ ПОЛЬЗОВАТЕЛИ</h3>
           <div id="adminUsersList" style="display:flex;flex-direction:column;gap:8px"></div>
           <div style="margin-top:14px;font-size:12px;color:var(--text3)">Всего зарегистрировано: <span id="adminTotalUsers" style="color:var(--accent2);font-weight:700">0</span></div>
+        </div>
+
+        <!-- Бан -->
+        <div class="cabinet-card">
+          <h3 style="color:#ff4444;margin-bottom:16px">🔨 БАН</h3>
+          <div class="input-wrap" style="margin-bottom:12px">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="6" r="2.5"/><path d="M3 14c0-2.761 2.239-5 5-5s5 2.239 5 5"/></svg>
+            <input class="form-input" id="adminBanUser2" type="text" placeholder="Логин пользователя">
+          </div>
+          <select id="adminBanDays2" style="width:100%;padding:10px 14px;background:#ffffff08;border:1px solid var(--border2);border-radius:12px;color:var(--text);font-size:13px;font-family:inherit;outline:none;margin-bottom:12px;cursor:pointer">
+            <option value="7">📅 7 дней</option>
+            <option value="14">📅 14 дней</option>
+            <option value="30">📅 30 дней</option>
+            <option value="120">📅 120 дней</option>
+            <option value="365">📅 1 год</option>
+            <option value="9999">♾ 9999 дней (навсегда)</option>
+          </select>
+          <div style="display:flex;gap:8px">
+            <button class="btn-submit" style="background:#ff4444;margin-top:0;flex:1" onclick="adminBanUser('2')">🔨 Забанить</button>
+            <button class="btn-submit" style="background:#444;margin-top:0;flex:1" onclick="adminUnbanUser('2')">✅ Разбанить</button>
+          </div>
+          <div id="adminBanMsg2" style="font-size:13px;margin-top:10px;display:none"></div>
         </div>
 
         <!-- Удалить пользователя -->
@@ -723,11 +763,31 @@ footer{border-top:1px solid var(--border);padding:60px 20px 30px;max-width:1200p
           </div>
           <select id="adminRoleSelect" style="width:100%;padding:10px 14px;background:#ffffff08;border:1px solid var(--border2);border-radius:12px;color:var(--text);font-size:13px;font-family:inherit;outline:none;margin-bottom:12px;cursor:pointer">
             <option value="">— Убрать роль —</option>
+            <option value="owner">👑 Owner</option>
             <option value="coder">💻 Coder</option>
             <option value="media">🎬 Media</option>
+            <option value="tester">🧪 Tester</option>
           </select>
           <button class="btn-submit" style="margin-top:0" onclick="adminSetRole()">Применить роль</button>
           <div id="adminRoleMsg" style="font-size:13px;margin-top:10px;display:none"></div>
+        </div>
+
+        <!-- Выдать монеты -->
+        <div class="cabinet-card">
+          <h3 style="color:#f0c040;margin-bottom:16px">🪙 ВЫДАТЬ МОНЕТЫ</h3>
+          <div class="input-wrap" style="margin-bottom:12px">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="6" r="2.5"/><path d="M3 14c0-2.761 2.239-5 5-5s5 2.239 5 5"/></svg>
+            <input class="form-input" id="adminCoinsUser" type="text" placeholder="Логин пользователя">
+          </div>
+          <div class="input-wrap" style="margin-bottom:12px">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 5v3M8 11h.01"/></svg>
+            <input class="form-input" id="adminCoinsAmount" type="number" placeholder="Количество монет (+ или -)">
+          </div>
+          <div style="display:flex;gap:8px">
+            <button class="btn-submit" style="background:#f0c040;color:#000;margin-top:0;flex:1;font-weight:900" onclick="adminGiveCoins(1)">🪙 Добавить</button>
+            <button class="btn-submit" style="background:#444;margin-top:0;flex:1" onclick="adminGiveCoins(-1)">➖ Забрать</button>
+          </div>
+          <div id="adminCoinsMsg" style="font-size:13px;margin-top:10px;display:none"></div>
         </div>
 
         <!-- Объявление / уведомление -->
@@ -741,6 +801,22 @@ footer{border-top:1px solid var(--border);padding:60px 20px 30px;max-width:1200p
           </button>
         </div>
 
+        <!-- Кастомный префикс -->
+        <div class="cabinet-card">
+          <h3 style="color:#a855f7;margin-bottom:16px">🏷 КАСТОМНЫЙ ПРЕФИКС</h3>
+          <div class="input-wrap" style="margin-bottom:12px">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="6" r="2.5"/><path d="M3 14c0-2.761 2.239-5 5-5s5 2.239 5 5"/></svg>
+            <input class="form-input" id="adminPrefixUser" type="text" placeholder="Логин пользователя">
+          </div>
+          <div class="input-wrap" style="margin-bottom:12px">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M8 3v10"/></svg>
+            <input class="form-input" id="adminPrefixName" type="text" placeholder="Название префикса (пусто = убрать)">
+          </div>
+          <input id="adminPrefixColor" type="color" value="#7c6ef5" style="width:100%;height:36px;border-radius:10px;border:1px solid var(--border2);background:none;cursor:pointer;margin-bottom:12px">
+          <button class="btn-submit" style="margin-top:0;background:#a855f7" onclick="adminSetCustomPrefix()">Выдать префикс</button>
+          <div id="adminPrefixMsg" style="font-size:13px;margin-top:10px;display:none"></div>
+        </div>
+
         <!-- Статистика сайта -->
         <div class="cabinet-card" style="grid-column:1/-1">
           <h3 style="color:#ff6666;margin-bottom:16px">📊 СТАТИСТИКА САЙТА</h3>
@@ -748,6 +824,12 @@ footer{border-top:1px solid var(--border);padding:60px 20px 30px;max-width:1200p
           <div class="stat-row"><span class="stat-label">Последняя регистрация</span><span class="stat-value green" id="adminStat2">—</span></div>
           <div class="stat-row"><span class="stat-label">Версия клиента</span><span class="stat-value">Beta 2.5</span></div>
           <div class="stat-row"><span class="stat-label">Статус сервера</span><span class="stat-value green">🟢 Online</span></div>
+        </div>
+
+        <!-- Все ключи -->
+        <div class="cabinet-card" style="grid-column:1/-1">
+          <h3 style="color:#f0c040;margin-bottom:16px">🔑 ВСЕ КЛЮЧИ</h3>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;max-height:300px;overflow-y:auto" id="adminKeysList"></div>
         </div>
 
       </div>
@@ -918,6 +1000,206 @@ footer{border-top:1px solid var(--border);padding:60px 20px 30px;max-width:1200p
       <div style="padding:8px;background:#ffffff08;border-radius:8px;font-size:11px;color:var(--text3)">75🪙 — 10%</div>
       <div style="padding:8px;background:#ffffff08;border-radius:8px;font-size:11px;color:var(--text3)">100🪙 — 7%</div>
       <div style="padding:8px;background:#f0c04015;border:1px solid #f0c04030;border-radius:8px;font-size:11px;color:#f0c040">150🪙 — 5%</div>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN PAGE -->
+<div id="page-admin" class="page">
+  <div style="padding:110px 20px 60px;max-width:1100px;margin:0 auto">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:32px">
+      <div style="width:4px;height:32px;background:linear-gradient(to bottom,#ff4444,#ff8800);border-radius:4px"></div>
+      <h1 style="font-size:24px;font-weight:900;letter-spacing:-.02em">Панель администратора</h1>
+      <span style="padding:3px 12px;border-radius:20px;background:#ff444420;border:1px solid #ff444440;font-size:11px;color:#ff6666;font-weight:700">ADMIN ONLY</span>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+
+      <!-- Все пользователи -->
+      <div class="cabinet-card" style="grid-column:1/-1">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+          <h3 style="color:#ff6666">👥 ВСЕ ПОЛЬЗОВАТЕЛИ</h3>
+          <button onclick="adminLoadUsers()" style="padding:6px 14px;border-radius:20px;background:#ffffff0a;border:1px solid var(--border2);color:var(--text2);font-size:12px;cursor:pointer;font-family:inherit">↻ Обновить</button>
+        </div>
+        <div id="adminUsersList" style="display:flex;flex-direction:column;gap:8px"></div>
+        <div style="margin-top:14px;font-size:12px;color:var(--text3)">Всего: <span id="adminTotalUsers" style="color:var(--accent2);font-weight:700">0</span></div>
+      </div>
+
+      <!-- Бан -->
+      <div class="cabinet-card">
+        <h3 style="color:#ff4444;margin-bottom:16px">🔨 БАН</h3>
+        <div class="input-wrap" style="margin-bottom:12px">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="6" r="2.5"/><path d="M3 14c0-2.761 2.239-5 5-5s5 2.239 5 5"/></svg>
+          <input class="form-input" id="adminBanUser" type="text" placeholder="Логин пользователя">
+        </div>
+        <select id="adminBanDays" style="width:100%;padding:10px 14px;background:#ffffff08;border:1px solid var(--border2);border-radius:12px;color:var(--text);font-size:13px;font-family:inherit;outline:none;margin-bottom:12px;cursor:pointer">
+          <option value="7">📅 7 дней</option>
+          <option value="14">📅 14 дней</option>
+          <option value="30">📅 30 дней</option>
+          <option value="120">📅 120 дней</option>
+          <option value="365">📅 1 год</option>
+          <option value="9999">♾ 9999 дней (навсегда)</option>
+        </select>
+        <div style="display:flex;gap:8px">
+          <button class="btn-submit" style="background:#ff4444;margin-top:0;flex:1" onclick="adminBanUser()">🔨 Забанить</button>
+          <button class="btn-submit" style="background:#444;margin-top:0;flex:1" onclick="adminUnbanUser()">✅ Разбанить</button>
+        </div>
+        <div id="adminBanMsg" style="font-size:13px;margin-top:10px;display:none"></div>
+      </div>
+
+      <!-- Удалить -->
+      <div class="cabinet-card">
+        <h3 style="color:#ff6666;margin-bottom:16px">🗑 УДАЛИТЬ АККАУНТ</h3>
+        <div class="input-wrap" style="margin-bottom:12px">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="6" r="2.5"/><path d="M3 14c0-2.761 2.239-5 5-5s5 2.239 5 5"/></svg>
+          <input class="form-input" id="adminDelUser" type="text" placeholder="Логин">
+        </div>
+        <button class="btn-submit" style="background:#e05555;margin-top:0" onclick="adminDeleteUser()">Удалить</button>
+        <div id="adminDelMsg" style="font-size:13px;margin-top:10px;display:none"></div>
+      </div>
+
+      <!-- Выдать/забрать админа -->
+      <div class="cabinet-card">
+        <h3 style="color:#ff8800;margin-bottom:16px">🛡 ВЫДАТЬ АДМИНА</h3>
+        <div class="input-wrap" style="margin-bottom:12px">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="6" r="2.5"/><path d="M3 14c0-2.761 2.239-5 5-5s5 2.239 5 5"/></svg>
+          <input class="form-input" id="adminGiveUser" type="text" placeholder="Логин">
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn-submit" style="background:#ff8800;margin-top:0;flex:1" onclick="adminGiveAdmin()">⭐ Выдать</button>
+          <button class="btn-submit" style="background:#444;margin-top:0;flex:1" onclick="adminRevokeAdmin()">✕ Забрать</button>
+        </div>
+        <div id="adminGiveMsg" style="font-size:13px;margin-top:10px;display:none"></div>
+      </div>
+
+      <!-- Роль -->
+      <div class="cabinet-card">
+        <h3 style="color:#00c8ff;margin-bottom:16px">🎭 ВЫДАТЬ РОЛЬ</h3>
+        <div class="input-wrap" style="margin-bottom:12px">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="6" r="2.5"/><path d="M3 14c0-2.761 2.239-5 5-5s5 2.239 5 5"/></svg>
+          <input class="form-input" id="adminRoleUser" type="text" placeholder="Логин">
+        </div>
+        <select id="adminRoleSelect" style="width:100%;padding:10px 14px;background:#ffffff08;border:1px solid var(--border2);border-radius:12px;color:var(--text);font-size:13px;font-family:inherit;outline:none;margin-bottom:12px;cursor:pointer">
+          <option value="">— Убрать роль —</option>
+          <option value="owner">👑 Owner</option>
+          <option value="coder">💻 Coder</option>
+          <option value="media">🎬 Media</option>
+          <option value="tester">🧪 Tester</option>
+        </select>
+        <button class="btn-submit" style="margin-top:0" onclick="adminSetRole()">Применить</button>
+        <div id="adminRoleMsg" style="font-size:13px;margin-top:10px;display:none"></div>
+      </div>
+
+      <!-- Монеты -->
+      <div class="cabinet-card">
+        <h3 style="color:#f0c040;margin-bottom:16px">🪙 ВЫДАТЬ МОНЕТЫ</h3>
+        <div class="input-wrap" style="margin-bottom:12px">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="6" r="2.5"/><path d="M3 14c0-2.761 2.239-5 5-5s5 2.239 5 5"/></svg>
+          <input class="form-input" id="adminCoinsUser" type="text" placeholder="Логин">
+        </div>
+        <div class="input-wrap" style="margin-bottom:12px">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 5v3M8 11h.01"/></svg>
+          <input class="form-input" id="adminCoinsAmount" type="number" placeholder="Количество">
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn-submit" style="background:#f0c040;color:#000;margin-top:0;flex:1;font-weight:900" onclick="adminGiveCoins(1)">+ Добавить</button>
+          <button class="btn-submit" style="background:#444;margin-top:0;flex:1" onclick="adminGiveCoins(-1)">− Забрать</button>
+        </div>
+        <div id="adminCoinsMsg" style="font-size:13px;margin-top:10px;display:none"></div>
+      </div>
+
+      <!-- Кастомный префикс -->
+      <div class="cabinet-card">
+        <h3 style="color:#a855f7;margin-bottom:16px">🏷 КАСТОМНЫЙ ПРЕФИКС</h3>
+        <div class="input-wrap" style="margin-bottom:12px">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="6" r="2.5"/><path d="M3 14c0-2.761 2.239-5 5-5s5 2.239 5 5"/></svg>
+          <input class="form-input" id="adminPrefixUser" type="text" placeholder="Логин">
+        </div>
+        <div class="input-wrap" style="margin-bottom:12px">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M8 3v10"/></svg>
+          <input class="form-input" id="adminPrefixName" type="text" placeholder="Название (пусто = убрать)">
+        </div>
+        <input id="adminPrefixColor" type="color" value="#7c6ef5" style="width:100%;height:36px;border-radius:10px;border:1px solid var(--border2);background:none;cursor:pointer;margin-bottom:12px">
+        <button class="btn-submit" style="margin-top:0;background:#a855f7" onclick="adminSetCustomPrefix()">Выдать префикс</button>
+        <div id="adminPrefixMsg" style="font-size:13px;margin-top:10px;display:none"></div>
+      </div>
+
+      <!-- Уведомление -->
+      <div class="cabinet-card">
+        <h3 style="color:#ff6666;margin-bottom:16px">📢 УВЕДОМЛЕНИЕ</h3>
+        <textarea id="adminAnnounce" placeholder="Текст для всех пользователей..." style="width:100%;padding:12px 14px;background:#ffffff08;border:1px solid var(--border2);border-radius:12px;color:var(--text);font-size:13px;font-family:inherit;outline:none;resize:none;height:90px;margin-bottom:12px"></textarea>
+        <button class="btn-submit" style="margin-top:0" onclick="adminSendAnnounce()">📢 Отправить всем</button>
+      </div>
+
+      <!-- Статистика -->
+      <div class="cabinet-card">
+        <h3 style="color:#ff6666;margin-bottom:16px">📊 СТАТИСТИКА</h3>
+        <div class="stat-row"><span class="stat-label">Всего аккаунтов</span><span class="stat-value accent" id="adminStat1">0</span></div>
+        <div class="stat-row"><span class="stat-label">Последняя регистрация</span><span class="stat-value green" id="adminStat2">—</span></div>
+        <div class="stat-row"><span class="stat-label">Версия клиента</span><span class="stat-value">Beta 2.5</span></div>
+        <div class="stat-row"><span class="stat-label">Статус сервера</span><span class="stat-value green">🟢 Online</span></div>
+      </div>
+
+      <!-- Ключи -->
+      <div class="cabinet-card" style="grid-column:1/-1">
+        <h3 style="color:#f0c040;margin-bottom:16px">🔑 ВСЕ КЛЮЧИ</h3>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;max-height:340px;overflow-y:auto" id="adminKeysList"></div>
+      </div>
+
+      <!-- ЧАТЫ ПОДДЕРЖКИ -->
+      <div class="cabinet-card" style="grid-column:1/-1">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+          <h3 style="color:#00c8ff">💬 ЧАТЫ ПОДДЕРЖКИ</h3>
+          <span id="adminUnreadBadge" style="display:none;padding:2px 8px;border-radius:20px;background:#e0555520;border:1px solid #e0555540;font-size:11px;color:#e05555;font-weight:700"></span>
+        </div>
+        <div style="display:grid;grid-template-columns:220px 1fr;gap:0;border:1px solid var(--border2);border-radius:14px;overflow:hidden;height:420px">
+          <!-- список чатов -->
+          <div style="border-right:1px solid var(--border2);overflow-y:auto;background:#ffffff04" id="adminChatList">
+            <div style="padding:14px 12px;font-size:12px;color:var(--text3);border-bottom:1px solid var(--border2)">Активные чаты</div>
+          </div>
+          <!-- область переписки -->
+          <div style="display:flex;flex-direction:column">
+            <div id="adminChatHeader" style="padding:12px 16px;border-bottom:1px solid var(--border2);font-size:13px;font-weight:700;color:var(--text2)">Выберите чат</div>
+            <div id="adminChatMessages" style="flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:8px"></div>
+            <div style="padding:10px;border-top:1px solid var(--border2);display:flex;gap:8px">
+              <input id="adminChatInput" class="form-input" type="text" placeholder="Ответить..." style="flex:1" onkeydown="if(event.key==='Enter')adminSendReply()">
+              <button onclick="adminSendReply()" style="padding:8px 16px;border-radius:10px;background:var(--accent);border:none;color:#fff;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit">→</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- SUPPORT CHAT MODAL -->
+<div class="modal-overlay" id="supportModal" style="display:none">
+  <div style="background:var(--bg3);border:1px solid var(--border2);border-radius:24px;width:100%;max-width:420px;height:560px;display:flex;flex-direction:column;position:relative;overflow:hidden">
+    <!-- header -->
+    <div style="padding:18px 20px;border-bottom:1px solid var(--border2);display:flex;align-items:center;gap:12px">
+      <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#a855f7,#7c6ef5);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;color:#fff;flex-shrink:0">d</div>
+      <div>
+        <div style="font-size:14px;font-weight:800">darkpidort</div>
+        <div style="font-size:11px;color:#4caf82">● онлайн</div>
+      </div>
+      <button onclick="closeModal('supportModal')" style="margin-left:auto;background:none;border:none;color:var(--text3);cursor:pointer;font-size:20px;line-height:1">✕</button>
+    </div>
+    <!-- messages -->
+    <div id="supportMessages" style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px">
+      <!-- welcome message -->
+      <div style="display:flex;gap:8px;align-items:flex-end">
+        <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#a855f7,#7c6ef5);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#fff;flex-shrink:0">d</div>
+        <div style="max-width:75%">
+          <div style="background:#ffffff0f;border:1px solid var(--border2);border-radius:14px 14px 14px 2px;padding:10px 14px;font-size:13px;line-height:1.5">Привет! Чем могу помочь? 👋</div>
+          <div style="font-size:10px;color:var(--text3);margin-top:4px;padding-left:4px">darkpidort</div>
+        </div>
+      </div>
+    </div>
+    <!-- input -->
+    <div style="padding:12px;border-top:1px solid var(--border2);display:flex;gap:8px">
+      <input id="supportInput" class="form-input" type="text" placeholder="Написать сообщение..." style="flex:1" onkeydown="if(event.key==='Enter')supportSendMsg()">
+      <button onclick="supportSendMsg()" style="padding:10px 16px;border-radius:12px;background:var(--accent);border:none;color:#fff;font-weight:700;font-size:14px;cursor:pointer;font-family:inherit">→</button>
     </div>
   </div>
 </div>
@@ -1096,6 +1378,13 @@ function doLogin(){
   const users = getUsers();
   const user = users.find(u=>(u.email===email||u.username===email)&&u.password===password);
   if(!user){errEl.textContent='Неверный логин или пароль';errEl.style.display='block';return}
+  // check ban
+  const bans = JSON.parse(localStorage.getItem('paradox_bans')||'{}');
+  const ban = bans[user.username];
+  if(ban && Date.now() < ban.until){
+    errEl.textContent='🔨 Аккаунт заблокирован. Осталось: '+formatBanTime(ban.until);
+    errEl.style.display='block';return;
+  }
   saveSession(user);
   currentUser = user;
   closeModal('loginModal');
@@ -1119,6 +1408,12 @@ function updateNav(){
     btn.querySelector('span').setAttribute('data-i18n','nav_cabinet');
     btn.querySelector('span').textContent = i18n[currentLang]['nav_cabinet'];
   }
+  // show/hide admin nav button
+  const adminBtn = document.getElementById('navAdminBtn');
+  if(adminBtn){
+    const isAdm = currentUser && ((currentUser.username==='darkpidort'&&currentUser.email==='eeeedark66@gmail.com')||(currentUser.username==='Kimp1ntyao'&&currentUser.email==='teststeam404@gmail.com')||currentUser.isAdmin===true);
+    adminBtn.style.display = isAdm ? 'flex' : 'none';
+  }
 }
 
 function cabinetClick(){
@@ -1126,7 +1421,156 @@ function cabinetClick(){
   else openModal('login');
 }
 
-function openSupport(){showToast('support@paradoxclient.xyz','success')}
+function openSupport(){
+  if(!currentUser){openModal('login');return;}
+  openModal('supportModal');
+  renderSupportMessages();
+}
+
+// ==================== SUPPORT CHAT ====================
+let adminActiveChatUser = null;
+
+function getSupportChats(){
+  return JSON.parse(localStorage.getItem('paradox_support_chats')||'{}');
+}
+function saveSupportChats(data){
+  localStorage.setItem('paradox_support_chats', JSON.stringify(data));
+}
+
+function supportSendMsg(){
+  if(!currentUser) return;
+  const input = document.getElementById('supportInput');
+  const text = input.value.trim();
+  if(!text) return;
+  input.value = '';
+  const chats = getSupportChats();
+  const u = currentUser.username;
+  if(!chats[u]) chats[u] = [];
+  chats[u].push({from:'user', text, time: Date.now()});
+  saveSupportChats(chats);
+  renderSupportMessages();
+  // notify admin panel if open
+  adminLoadChats();
+}
+
+function renderSupportMessages(){
+  if(!currentUser) return;
+  const container = document.getElementById('supportMessages');
+  if(!container) return;
+  const chats = getSupportChats();
+  const msgs = chats[currentUser.username] || [];
+  // keep welcome message
+  const welcome = `<div style="display:flex;gap:8px;align-items:flex-end">
+    <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#a855f7,#7c6ef5);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#fff;flex-shrink:0">d</div>
+    <div style="max-width:75%">
+      <div style="background:#ffffff0f;border:1px solid var(--border2);border-radius:14px 14px 14px 2px;padding:10px 14px;font-size:13px;line-height:1.5">Привет! Чем могу помочь? 👋</div>
+      <div style="font-size:10px;color:var(--text3);margin-top:4px;padding-left:4px">darkpidort</div>
+    </div>
+  </div>`;
+  container.innerHTML = welcome + msgs.map(m => {
+    const isUser = m.from === 'user';
+    const t = new Date(m.time).toLocaleTimeString('ru',{hour:'2-digit',minute:'2-digit'});
+    if(isUser){
+      return `<div style="display:flex;justify-content:flex-end">
+        <div style="max-width:75%">
+          <div style="background:var(--accent);border-radius:14px 14px 2px 14px;padding:10px 14px;font-size:13px;line-height:1.5;color:#fff">${m.text}</div>
+          <div style="font-size:10px;color:var(--text3);margin-top:4px;text-align:right;padding-right:4px">${t}</div>
+        </div>
+      </div>`;
+    } else {
+      return `<div style="display:flex;gap:8px;align-items:flex-end">
+        <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#a855f7,#7c6ef5);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;color:#fff;flex-shrink:0">d</div>
+        <div style="max-width:75%">
+          <div style="background:#ffffff0f;border:1px solid var(--border2);border-radius:14px 14px 14px 2px;padding:10px 14px;font-size:13px;line-height:1.5">${m.text}</div>
+          <div style="font-size:10px;color:var(--text3);margin-top:4px;padding-left:4px">${t} · darkpidort</div>
+        </div>
+      </div>`;
+    }
+  }).join('');
+  container.scrollTop = container.scrollHeight;
+}
+
+function adminLoadChats(){
+  const list = document.getElementById('adminChatList');
+  if(!list) return;
+  const chats = getSupportChats();
+  const users = Object.keys(chats);
+  let unread = 0;
+  const items = users.map(u => {
+    const msgs = chats[u];
+    const last = msgs[msgs.length-1];
+    const t = last ? new Date(last.time).toLocaleTimeString('ru',{hour:'2-digit',minute:'2-digit'}) : '';
+    const hasUnread = msgs.some(m=>m.from==='user'&&!m.read);
+    if(hasUnread) unread++;
+    const isActive = adminActiveChatUser === u;
+    return `<div onclick="adminOpenChat('${u}')" style="padding:12px;cursor:pointer;border-bottom:1px solid var(--border2);background:${isActive?'#ffffff0a':'transparent'};transition:.15s">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px">
+        <span style="font-size:13px;font-weight:${hasUnread?'800':'600'};color:${hasUnread?'var(--text)':'var(--text2)'}">${u}</span>
+        <span style="font-size:10px;color:var(--text3)">${t}</span>
+      </div>
+      <div style="font-size:11px;color:var(--text3);overflow:hidden;white-space:nowrap;text-overflow:ellipsis;max-width:160px">${last?last.text:'...'}</div>
+      ${hasUnread?`<span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#e05555;margin-top:4px"></span>`:''}
+    </div>`;
+  }).join('');
+  list.innerHTML = `<div style="padding:14px 12px;font-size:12px;color:var(--text3);border-bottom:1px solid var(--border2)">Активные чаты</div>` + (items || `<div style="padding:16px;font-size:12px;color:var(--text3);text-align:center">Нет чатов</div>`);
+  const badge = document.getElementById('adminUnreadBadge');
+  if(badge){ badge.style.display = unread>0?'inline':'none'; badge.textContent = unread+' новых'; }
+  if(adminActiveChatUser) renderAdminChat(adminActiveChatUser);
+}
+
+function adminOpenChat(username){
+  adminActiveChatUser = username;
+  // mark as read
+  const chats = getSupportChats();
+  if(chats[username]) chats[username].forEach(m=>{if(m.from==='user')m.read=true;});
+  saveSupportChats(chats);
+  adminLoadChats();
+}
+
+function renderAdminChat(username){
+  const header = document.getElementById('adminChatHeader');
+  const container = document.getElementById('adminChatMessages');
+  if(!header||!container) return;
+  header.textContent = '💬 '+username;
+  const chats = getSupportChats();
+  const msgs = chats[username] || [];
+  container.innerHTML = msgs.map(m => {
+    const isAdmin = m.from === 'admin';
+    const t = new Date(m.time).toLocaleTimeString('ru',{hour:'2-digit',minute:'2-digit'});
+    if(isAdmin){
+      return `<div style="display:flex;justify-content:flex-end">
+        <div style="max-width:75%">
+          <div style="background:var(--accent);border-radius:14px 14px 2px 14px;padding:8px 12px;font-size:13px;color:#fff">${m.text}</div>
+          <div style="font-size:10px;color:var(--text3);margin-top:3px;text-align:right">${t} · вы</div>
+        </div>
+      </div>`;
+    } else {
+      return `<div style="display:flex;gap:6px;align-items:flex-end">
+        <div style="width:24px;height:24px;border-radius:50%;background:#ffffff15;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--text2);flex-shrink:0">${username[0].toUpperCase()}</div>
+        <div style="max-width:75%">
+          <div style="background:#ffffff0f;border:1px solid var(--border2);border-radius:14px 14px 14px 2px;padding:8px 12px;font-size:13px">${m.text}</div>
+          <div style="font-size:10px;color:var(--text3);margin-top:3px">${t}</div>
+        </div>
+      </div>`;
+    }
+  }).join('') || `<div style="text-align:center;color:var(--text3);font-size:13px;margin-top:40px">Начало чата</div>`;
+  container.scrollTop = container.scrollHeight;
+}
+
+function adminSendReply(){
+  if(!adminActiveChatUser) return;
+  const input = document.getElementById('adminChatInput');
+  const text = input.value.trim();
+  if(!text) return;
+  input.value = '';
+  const chats = getSupportChats();
+  if(!chats[adminActiveChatUser]) chats[adminActiveChatUser] = [];
+  chats[adminActiveChatUser].push({from:'admin', text, time: Date.now(), read: true});
+  saveSupportChats(chats);
+  adminLoadChats();
+  // update support modal if that user has it open
+  if(currentUser && currentUser.username === adminActiveChatUser) renderSupportMessages();
+}
 
 // ==================== CABINET ====================
 function handleAvatarUpload(input){
@@ -1176,6 +1620,17 @@ function loadCabinet(){
   updateCabinetCoins();
 
   const isAdmin = (u.username==='darkpidort' && u.email==='eeeedark66@gmail.com') || (u.username==='Kimp1ntyao' && u.email==='teststeam404@gmail.com') || u.isAdmin===true;
+  const isBeta = !!localStorage.getItem('paradox_beta_'+u.username);
+  const planEl = document.getElementById('cabPlanDisplay');
+  if(planEl){
+    if(isAdmin || isBeta){
+      planEl.textContent = 'Beta';
+      planEl.style.color = '#a855f7';
+    } else {
+      planEl.textContent = 'Free';
+      planEl.style.color = 'var(--success)';
+    }
+  }
   const adminPanel = document.getElementById('adminPanel');
   const badge = document.getElementById('userBadge');
 
@@ -1186,8 +1641,26 @@ function loadCabinet(){
       badge.innerHTML='⭐ ADMIN';
     }
     adminLoadUsers();
+    adminLoadChats();
   } else {
     if(adminPanel) adminPanel.style.display='none';
+    // show role badge for non-admin users
+    if(badge){
+      const role = u.role;
+      if(isBeta){
+        badge.style.cssText='display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;background:#a855f722;border:1px solid #a855f755;font-size:11px;font-weight:700;color:#a855f7;margin-top:8px';
+        badge.innerHTML='🔮 Beta';
+      } else if(role==='coder'){
+        badge.style.cssText='display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;background:#00c8ff22;border:1px solid #00c8ff55;font-size:11px;font-weight:700;color:#00c8ff;margin-top:8px';
+        badge.innerHTML='💻 Coder';
+      } else if(role==='media'){
+        badge.style.cssText='display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;background:#ff44aa22;border:1px solid #ff44aa55;font-size:11px;font-weight:700;color:#ff44aa;margin-top:8px';
+        badge.innerHTML='🎬 Media';
+      } else {
+        badge.style.cssText='display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;background:#7c6ef520;border:1px solid #7c6ef540;font-size:11px;font-weight:700;color:#9d92f7;margin-top:8px';
+        badge.innerHTML='Free план';
+      }
+    }
   }
 }
 
@@ -1199,9 +1672,9 @@ function adminLoadUsers(){
   const stat1 = document.getElementById('adminStat1');
   const stat2 = document.getElementById('adminStat2');
   if(!list) return;
-  total.textContent = users.length;
-  stat1.textContent = users.length;
-  stat2.textContent = users.length ? users[users.length-1].regDate||'—' : '—';
+  if(total) total.textContent = users.length;
+  if(stat1) stat1.textContent = users.length;
+  if(stat2) stat2.textContent = users.length ? users[users.length-1].regDate||'—' : '—';
   if(users.length===0){
     list.innerHTML='<div style="font-size:13px;color:var(--text3);text-align:center;padding:16px">Нет зарегистрированных пользователей</div>';
     return;
@@ -1233,11 +1706,14 @@ function adminLoadUsers(){
   if(users.length===0){list.innerHTML='<div style="font-size:13px;color:var(--text3);text-align:center;padding:16px">Нет зарегистрированных пользователей</div>';return;}
   list.innerHTML = users.map((u,i)=>{
     const isAdminUser = (u.username==='darkpidort')||u.isAdmin===true;
-    const roleTag = u.role==='coder'?'<span style="font-size:10px;color:#00c8ff;background:#00c8ff20;padding:1px 6px;border-radius:10px;border:1px solid #00c8ff40">Coder</span>':u.role==='media'?'<span style="font-size:10px;color:#ff44aa;background:#ff44aa20;padding:1px 6px;border-radius:10px;border:1px solid #ff44aa40">Media</span>':'';
+    const roleTag = u.role==='coder'?'<span style="font-size:10px;color:#00c8ff;background:#00c8ff20;padding:1px 6px;border-radius:10px;border:1px solid #00c8ff40">💻 Coder</span>':u.role==='media'?'<span style="font-size:10px;color:#ff44aa;background:#ff44aa20;padding:1px 6px;border-radius:10px;border:1px solid #ff44aa40">🎬 Media</span>':'';
+    const adminTag = isAdminUser ? '<span style="font-size:10px;color:#ff8800;background:#ff880020;padding:1px 6px;border-radius:10px;border:1px solid #ff880040">⭐ ADMIN</span>' : '';
+    const coins = parseInt(localStorage.getItem('paradox_coins_'+u.username)||'0');
+    const coinsTag = `<span style="font-size:10px;color:#f0c040;background:#f0c04015;padding:1px 6px;border-radius:10px;border:1px solid #f0c04030">🪙 ${coins}</span>`;
     return `<div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:#ffffff05;border:1px solid var(--border);border-radius:12px">
       <div style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--accent),#a855f7);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;color:#fff;flex-shrink:0">${u.username[0].toUpperCase()}</div>
       <div style="flex:1;min-width:0">
-        <div style="font-size:13px;font-weight:700;margin-bottom:2px">${u.username} ${isAdminUser?'<span style="font-size:10px;color:#ff8800;background:#ff880020;padding:1px 6px;border-radius:10px;border:1px solid #ff880040">ADMIN</span>':''} ${roleTag}</div>
+        <div style="font-size:13px;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:4px;flex-wrap:wrap">${u.username} ${adminTag} ${roleTag} ${coinsTag}</div>
         <div style="font-size:11px;color:var(--text3)">${u.email} · ${u.regDate||'—'}</div>
       </div>
       <span style="font-size:11px;color:var(--text3)">#${i+1}</span>
@@ -1254,6 +1730,7 @@ function adminGiveAdmin(){
   if(!user){msg.textContent='Пользователь не найден';msg.style.color='var(--red)';msg.style.display='block';return;}
   if(user.isAdmin){msg.textContent=login+' уже является админом';msg.style.color='var(--text2)';msg.style.display='block';return;}
   user.isAdmin=true; saveUsers(users);
+  if(currentUser&&currentUser.username===login){currentUser.isAdmin=true;saveSession(currentUser);loadCabinet();}
   msg.textContent='✅ '+login+' теперь админ!';msg.style.color='var(--success)';msg.style.display='block';
   adminLoadUsers(); setTimeout(()=>msg.style.display='none',3000);
 }
@@ -1267,6 +1744,7 @@ function adminRevokeAdmin(){
   const user = users.find(u=>u.username===login);
   if(!user){msg.textContent='Пользователь не найден';msg.style.color='var(--red)';msg.style.display='block';return;}
   user.isAdmin=false; saveUsers(users);
+  if(currentUser&&currentUser.username===login){currentUser.isAdmin=false;saveSession(currentUser);loadCabinet();}
   msg.textContent='❌ Права у '+login+' забраны';msg.style.color='var(--text2)';msg.style.display='block';
   adminLoadUsers(); setTimeout(()=>msg.style.display='none',3000);
 }
@@ -1295,10 +1773,34 @@ function adminSetRole(){
   if(!user){msg.textContent='Пользователь не найден';msg.style.color='var(--red)';msg.style.display='block';return;}
   user.role=role; saveUsers(users);
   // update session if it's current user
-  if(currentUser&&currentUser.username===login){currentUser.role=role;saveSession(currentUser);}
+  if(currentUser&&currentUser.username===login){currentUser.role=role;saveSession(currentUser);loadCabinet();}
   msg.textContent=role?'✅ Роль «'+role+'» выдана '+login:'✅ Роль убрана у '+login;
   msg.style.color='var(--success)';msg.style.display='block';
   adminLoadUsers(); setTimeout(()=>msg.style.display='none',3000);
+}
+
+function adminGiveCoins(sign){
+  const login = document.getElementById('adminCoinsUser').value.trim();
+  const amount = parseInt(document.getElementById('adminCoinsAmount').value);
+  const msg = document.getElementById('adminCoinsMsg');
+  if(!login){msg.textContent='Введите логин';msg.style.color='var(--red)';msg.style.display='block';return;}
+  if(!amount||isNaN(amount)||amount<=0){msg.textContent='Введите корректное количество';msg.style.color='var(--red)';msg.style.display='block';return;}
+  const users = getUsers();
+  const user = users.find(u=>u.username===login);
+  if(!user){msg.textContent='Пользователь не найден';msg.style.color='var(--red)';msg.style.display='block';return;}
+  // get current coins from localStorage
+  const key = 'paradox_coins_'+login;
+  const cur = parseInt(localStorage.getItem(key)||'0');
+  const delta = sign * amount;
+  const newVal = Math.max(0, cur + delta);
+  localStorage.setItem(key, newVal);
+  // if it's the current logged-in user, update their display
+  if(currentUser && currentUser.username===login) updateCabinetCoins();
+  const verb = sign>0?'добавлено':'снято';
+  msg.textContent=`✅ ${Math.abs(delta)}🪙 ${verb} у ${login}. Теперь: ${newVal}🪙`;
+  msg.style.color='var(--success)';msg.style.display='block';
+  adminLoadUsers();
+  setTimeout(()=>msg.style.display='none',4000);
 }
 
 function adminSendAnnounce(){
@@ -1311,7 +1813,7 @@ function adminSendAnnounce(){
 // ==================== SPECIAL USERS ====================
 const SPECIAL_PREFIXES = {
   'Kimp1ntyao': {prefix:'VibeCoder', color:'#00c8ff'},
-  'darkpidort':  {prefix:'zxcGul1337', color:'#f0c040'},
+  'darkpidort':  {prefix:'depre??ed', color:'#9898a8'},
 };
 
 // ==================== COINS & SHOP ====================
@@ -1354,9 +1856,10 @@ function saveUserPrefixes(arr){
 }
 function getUserActivePrefix(){
   if(!currentUser) return null;
-  // special users always get their prefix
+  const manual = JSON.parse(localStorage.getItem('paradox_active_prefix_'+currentUser.username)||'null');
+  if(manual) return manual;
   if(SPECIAL_PREFIXES[currentUser.username]) return SPECIAL_PREFIXES[currentUser.username];
-  return JSON.parse(localStorage.getItem('paradox_active_prefix_'+currentUser.username)||'null');
+  return null;
 }
 function setUserActivePrefix(item){
   if(!currentUser) return;
@@ -1438,10 +1941,12 @@ function updateCabinetCoins(){
   const roleEl = document.getElementById('cabRoleDisplay');
   if(roleEl){
     const role = currentUser.role;
-    const isAdmin = (currentUser.username==='darkpidort' && currentUser.email==='eeeedark66@gmail.com') || currentUser.isAdmin;
+    const isAdmin = (currentUser.username==='darkpidort' && currentUser.email==='eeeedark66@gmail.com') || (currentUser.username==='Kimp1ntyao' && currentUser.email==='teststeam404@gmail.com') || currentUser.isAdmin;
     if(isAdmin) roleEl.innerHTML = '<span class="role-badge role-admin">⭐ Admin</span>';
+    else if(role==='owner') roleEl.innerHTML = '<span class="role-badge" style="background:#ffd70022;border:1px solid #ffd70055;color:#ffd700">👑 Owner</span>';
     else if(role==='coder') roleEl.innerHTML = '<span class="role-badge role-coder">💻 Coder</span>';
     else if(role==='media') roleEl.innerHTML = '<span class="role-badge role-media">🎬 Media</span>';
+    else if(role==='tester') roleEl.innerHTML = '<span class="role-badge" style="background:#44ff8822;border:1px solid #44ff8855;color:#44ff88">🧪 Tester</span>';
     else roleEl.textContent = 'Пользователь';
   }
 
@@ -1570,8 +2075,291 @@ function doSpin(){
     showToast('🎉 Вы выиграли '+prize.coins+' коинов!','success');
     updateSpinTimer();
     updateCabinetCoins();
-    document.getElementById('shopCoinsDisplay').textContent = getUserCoins();
+    const scEl = document.getElementById('shopCoinsDisplay');
+    if(scEl) scEl.textContent = getUserCoins();
   },3700);
+}
+
+// ==================== BAN SYSTEM ====================
+function adminBanUser(suffix){
+  suffix = suffix||'';
+  const login = document.getElementById('adminBanUser'+suffix).value.trim();
+  const days = parseInt(document.getElementById('adminBanDays'+suffix).value);
+  const msg = document.getElementById('adminBanMsg'+suffix);
+  if(!login){msg.textContent='Введите логин';msg.style.color='var(--red)';msg.style.display='block';return;}
+  if(login==='darkpidort'||login==='Kimp1ntyao'){msg.textContent='Нельзя забанить администратора';msg.style.color='var(--red)';msg.style.display='block';return;}
+  const users = getUsers();
+  const user = users.find(u=>u.username===login);
+  if(!user){msg.textContent='Пользователь не найден';msg.style.color='var(--red)';msg.style.display='block';return;}
+  const until = Date.now() + days*24*60*60*1000;
+  const bans = JSON.parse(localStorage.getItem('paradox_bans')||'{}');
+  bans[login] = {until, days};
+  localStorage.setItem('paradox_bans', JSON.stringify(bans));
+  const label = days===9999?'навсегда':days+' дн.';
+  msg.textContent='🔨 '+login+' забанен на '+label;
+  msg.style.color='#ff4444';msg.style.display='block';
+  adminLoadUsers(); setTimeout(()=>msg.style.display='none',4000);
+}
+
+function adminUnbanUser(suffix){
+  suffix = suffix||'';
+  const login = document.getElementById('adminBanUser'+suffix).value.trim();
+  const msg = document.getElementById('adminBanMsg'+suffix);
+  if(!login){msg.textContent='Введите логин';msg.style.color='var(--red)';msg.style.display='block';return;}
+  const bans = JSON.parse(localStorage.getItem('paradox_bans')||'{}');
+  if(!bans[login]){msg.textContent=login+' не забанен';msg.style.color='var(--text2)';msg.style.display='block';return;}
+  delete bans[login];
+  localStorage.setItem('paradox_bans', JSON.stringify(bans));
+  msg.textContent='✅ '+login+' разбанен';msg.style.color='var(--success)';msg.style.display='block';
+  adminLoadUsers(); setTimeout(()=>msg.style.display='none',3000);
+}
+
+function checkBan(){
+  if(!currentUser) return false;
+  const bans = JSON.parse(localStorage.getItem('paradox_bans')||'{}');
+  const ban = bans[currentUser.username];
+  if(!ban) return false;
+  if(Date.now() < ban.until) return ban;
+  // expired — remove
+  delete bans[currentUser.username];
+  localStorage.setItem('paradox_bans', JSON.stringify(bans));
+  return false;
+}
+
+function formatBanTime(until){
+  const diff = until - Date.now();
+  const d = Math.floor(diff/86400000);
+  const h = Math.floor((diff%86400000)/3600000);
+  const m = Math.floor((diff%3600000)/60000);
+  if(d>3000) return 'навсегда';
+  if(d>0) return d+'д '+h+'ч '+m+'м';
+  return h+'ч '+m+'м';
+}
+
+// ==================== KEYS ====================
+const COIN_KEYS = (function(){
+  const keys = {};
+  const sets = [
+    {coins:30,  prefix:'PARA-30CN', count:10},
+    {coins:50,  prefix:'PARA-50CN', count:10},
+    {coins:75,  prefix:'PARA-75CN', count:10},
+    {coins:100, prefix:'PARA-100C', count:10},
+    {coins:150, prefix:'PARA-150C', count:10},
+  ];
+  // generate deterministic keys
+  const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  function rng(seed){let x=seed;return()=>{x=((x*1664525)+1013904223)>>>0;return x};}
+  sets.forEach(({coins,prefix,count},si)=>{
+    for(let i=0;i<count;i++){
+      const r=rng(coins*1000+si*100+i);
+      const seg=()=>{let s='';for(let j=0;j<4;j++)s+=chars[r()%chars.length];return s;};
+      const key=prefix+'-'+seg()+'-'+seg();
+      keys[key]={coins,used:false};
+    }
+  });
+  return keys;
+})();
+
+function redeemKey(){
+  const raw = document.getElementById('keyInput').value.trim().toUpperCase();
+  const msg = document.getElementById('keyMsg');
+  if(!raw){msg.textContent='Введите ключ';msg.style.color='var(--red)';msg.style.display='block';return;}
+  if(!currentUser){msg.textContent='Войдите в аккаунт';msg.style.color='var(--red)';msg.style.display='block';return;}
+
+  // check localStorage for used keys
+  const usedKeys = JSON.parse(localStorage.getItem('paradox_used_keys_'+currentUser.username)||'[]');
+  if(usedKeys.includes(raw)){
+    msg.textContent='❌ Этот ключ уже использован вами';msg.style.color='var(--red)';msg.style.display='block';return;
+  }
+  const allUsed = JSON.parse(localStorage.getItem('paradox_all_used_keys')||'[]');
+  if(allUsed.includes(raw)){
+    msg.textContent='❌ Этот ключ уже активирован';msg.style.color='var(--red)';msg.style.display='block';return;
+  }
+
+  // check admin-generated keys first
+  const adminKeys = JSON.parse(localStorage.getItem('paradox_admin_keys')||'{}');
+  if(adminKeys[raw] && !adminKeys[raw].used){
+    const coins = adminKeys[raw].coins;
+    adminKeys[raw].used = true;
+    localStorage.setItem('paradox_admin_keys', JSON.stringify(adminKeys));
+    allUsed.push(raw); localStorage.setItem('paradox_all_used_keys', JSON.stringify(allUsed));
+    usedKeys.push(raw); localStorage.setItem('paradox_used_keys_'+currentUser.username, JSON.stringify(usedKeys));
+    setUserCoins(getUserCoins()+coins);
+    updateCabinetCoins();
+    msg.textContent='✅ Активировано! +'+coins+' коинов';msg.style.color='var(--success)';msg.style.display='block';
+    document.getElementById('keyInput').value='';
+    showToast('🔑 +'+coins+' коинов активировано!','success');
+    return;
+  }
+
+  // check built-in keys
+  if(COIN_KEYS[raw] && !COIN_KEYS[raw].used){
+    const coins = COIN_KEYS[raw].coins;
+    COIN_KEYS[raw].used = true;
+    allUsed.push(raw); localStorage.setItem('paradox_all_used_keys', JSON.stringify(allUsed));
+    usedKeys.push(raw); localStorage.setItem('paradox_used_keys_'+currentUser.username, JSON.stringify(usedKeys));
+    setUserCoins(getUserCoins()+coins);
+    updateCabinetCoins();
+    msg.textContent='✅ Активировано! +'+coins+' коинов';msg.style.color='var(--success)';msg.style.display='block';
+    document.getElementById('keyInput').value='';
+    showToast('🔑 +'+coins+' коинов активировано!','success');
+    return;
+  }
+
+  msg.textContent='❌ Неверный или уже использованный ключ';msg.style.color='var(--red)';msg.style.display='block';
+}
+
+// ==================== ADMIN FUNCTIONS ====================
+function adminLoadUsers(){
+  const users = getUsers();
+  const list = document.getElementById('adminUsersList');
+  const total = document.getElementById('adminTotalUsers');
+  const stat1 = document.getElementById('adminStat1');
+  const stat2 = document.getElementById('adminStat2');
+  if(!list) return;
+  if(total) total.textContent = users.length;
+  if(stat1) stat1.textContent = users.length;
+  if(stat2) stat2.textContent = users.length ? users[users.length-1].regDate||'—' : '—';
+  if(users.length===0){list.innerHTML='<div style="font-size:13px;color:var(--text3);text-align:center;padding:16px">Нет зарегистрированных пользователей</div>';return;}
+  list.innerHTML = users.map((u,i)=>{
+    const isAdminUser = (u.username==='darkpidort')||(u.username==='Kimp1ntyao')||u.isAdmin===true;
+    const roleTag = u.role==='owner'?'<span style="font-size:10px;color:#ffd700;background:#ffd70020;padding:1px 6px;border-radius:10px;border:1px solid #ffd70040">👑 Owner</span>':u.role==='coder'?'<span style="font-size:10px;color:#00c8ff;background:#00c8ff20;padding:1px 6px;border-radius:10px;border:1px solid #00c8ff40">Coder</span>':u.role==='media'?'<span style="font-size:10px;color:#ff44aa;background:#ff44aa20;padding:1px 6px;border-radius:10px;border:1px solid #ff44aa40">Media</span>':u.role==='tester'?'<span style="font-size:10px;color:#44ff88;background:#44ff8820;padding:1px 6px;border-radius:10px;border:1px solid #44ff8840">🧪 Tester</span>':'';
+    const bans = JSON.parse(localStorage.getItem('paradox_bans')||'{}');
+    const ban = bans[u.username];
+    const banTag = (ban && Date.now()<ban.until) ? `<span style="font-size:10px;color:#ff4444;background:#ff444420;padding:1px 6px;border-radius:10px;border:1px solid #ff444440">🔨 БАН ${formatBanTime(ban.until)}</span>` : '';
+    const coins = localStorage.getItem('paradox_coins_'+u.username)||'0';
+    return `<div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:#ffffff05;border:1px solid var(--border);border-radius:12px">
+      <div style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--accent),#a855f7);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;color:#fff;flex-shrink:0">${u.username[0].toUpperCase()}</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:13px;font-weight:700;margin-bottom:2px">${u.username} ${isAdminUser?'<span style="font-size:10px;color:#ff8800;background:#ff880020;padding:1px 6px;border-radius:10px;border:1px solid #ff880040">ADMIN</span>':''} ${roleTag} ${banTag}</div>
+        <div style="font-size:11px;color:var(--text3)">${u.email} · ${u.regDate||'—'} · 🪙${coins}</div>
+      </div>
+      <span style="font-size:11px;color:var(--text3)">#${i+1}</span>
+    </div>`;
+  }).join('');
+}
+
+function adminGiveAdmin(){
+  const login = document.getElementById('adminGiveUser').value.trim();
+  const msg = document.getElementById('adminGiveMsg');
+  if(!login){msg.textContent='Введите логин';msg.style.color='var(--red)';msg.style.display='block';return;}
+  const users = getUsers();
+  const user = users.find(u=>u.username===login);
+  if(!user){msg.textContent='Пользователь не найден';msg.style.color='var(--red)';msg.style.display='block';return;}
+  if(user.isAdmin){msg.textContent=login+' уже является админом';msg.style.color='var(--text2)';msg.style.display='block';return;}
+  user.isAdmin=true; saveUsers(users);
+  msg.textContent='✅ '+login+' теперь админ!';msg.style.color='var(--success)';msg.style.display='block';
+  adminLoadUsers(); setTimeout(()=>msg.style.display='none',3000);
+}
+
+function adminRevokeAdmin(){
+  const login = document.getElementById('adminGiveUser').value.trim();
+  const msg = document.getElementById('adminGiveMsg');
+  if(!login){msg.textContent='Введите логин';msg.style.color='var(--red)';msg.style.display='block';return;}
+  if(login==='darkpidort'||login==='Kimp1ntyao'){msg.textContent='Нельзя забрать права у главного админа';msg.style.color='var(--red)';msg.style.display='block';return;}
+  const users = getUsers();
+  const user = users.find(u=>u.username===login);
+  if(!user){msg.textContent='Пользователь не найден';msg.style.color='var(--red)';msg.style.display='block';return;}
+  user.isAdmin=false; saveUsers(users);
+  msg.textContent='❌ Права у '+login+' забраны';msg.style.color='var(--text2)';msg.style.display='block';
+  adminLoadUsers(); setTimeout(()=>msg.style.display='none',3000);
+}
+
+function adminDeleteUser(){
+  const login = document.getElementById('adminDelUser').value.trim();
+  const msg = document.getElementById('adminDelMsg');
+  if(!login){msg.textContent='Введите логин';msg.style.color='var(--red)';msg.style.display='block';return;}
+  if(login==='darkpidort'||login==='Kimp1ntyao'){msg.textContent='Нельзя удалить администратора';msg.style.color='var(--red)';msg.style.display='block';return;}
+  const users = getUsers();
+  const idx = users.findIndex(u=>u.username===login);
+  if(idx===-1){msg.textContent='Пользователь не найден';msg.style.color='var(--red)';msg.style.display='block';return;}
+  users.splice(idx,1); saveUsers(users);
+  msg.textContent='Аккаунт «'+login+'» удалён';msg.style.color='var(--success)';msg.style.display='block';
+  document.getElementById('adminDelUser').value='';
+  adminLoadUsers(); setTimeout(()=>msg.style.display='none',3000);
+}
+
+function adminSetRole(){
+  const login = document.getElementById('adminRoleUser').value.trim();
+  const role = document.getElementById('adminRoleSelect').value;
+  const msg = document.getElementById('adminRoleMsg');
+  if(!login){msg.textContent='Введите логин';msg.style.color='var(--red)';msg.style.display='block';return;}
+  const users = getUsers();
+  const user = users.find(u=>u.username===login);
+  if(!user){msg.textContent='Пользователь не найден';msg.style.color='var(--red)';msg.style.display='block';return;}
+  user.role=role||''; saveUsers(users);
+  if(currentUser&&currentUser.username===login){currentUser.role=role||'';saveSession(currentUser);updateCabinetCoins();}
+  msg.textContent=role?'✅ Роль «'+role+'» выдана '+login:'✅ Роль убрана у '+login;
+  msg.style.color='var(--success)';msg.style.display='block';
+  adminLoadUsers(); setTimeout(()=>msg.style.display='none',3000);
+}
+
+function adminGiveCoins(sign){
+  const login = document.getElementById('adminCoinsUser').value.trim();
+  const amount = parseInt(document.getElementById('adminCoinsAmount').value)||0;
+  const msg = document.getElementById('adminCoinsMsg');
+  if(!login){msg.textContent='Введите логин';msg.style.color='var(--red)';msg.style.display='block';return;}
+  if(!amount){msg.textContent='Введите количество';msg.style.color='var(--red)';msg.style.display='block';return;}
+  const users = getUsers();
+  const user = users.find(u=>u.username===login);
+  if(!user){msg.textContent='Пользователь не найден';msg.style.color='var(--red)';msg.style.display='block';return;}
+  const cur = parseInt(localStorage.getItem('paradox_coins_'+login)||'0');
+  const newVal = Math.max(0, cur + sign*amount);
+  localStorage.setItem('paradox_coins_'+login, newVal);
+  if(currentUser&&currentUser.username===login) updateCabinetCoins();
+  const action = sign>0?'добавлено':'снято';
+  msg.textContent='✅ '+action+' '+(sign*amount)+' коинов у '+login+' (было: '+cur+', стало: '+newVal+')';
+  msg.style.color='var(--success)';msg.style.display='block';
+  adminLoadUsers(); setTimeout(()=>msg.style.display='none',4000);
+}
+
+function adminSetCustomPrefix(){
+  const login = document.getElementById('adminPrefixUser').value.trim();
+  const name = document.getElementById('adminPrefixName').value.trim();
+  const color = document.getElementById('adminPrefixColor').value;
+  const msg = document.getElementById('adminPrefixMsg');
+  if(!login){msg.textContent='Введите логин';msg.style.color='var(--red)';msg.style.display='block';return;}
+  const users = getUsers();
+  const user = users.find(u=>u.username===login);
+  if(!user){msg.textContent='Пользователь не найден';msg.style.color='var(--red)';msg.style.display='block';return;}
+  if(!name){
+    // remove prefix
+    localStorage.removeItem('paradox_active_prefix_'+login);
+    msg.textContent='✅ Префикс у '+login+' убран';
+  } else {
+    const prefix = {id:'custom_'+login, name, color, prefix:name};
+    localStorage.setItem('paradox_active_prefix_'+login, JSON.stringify(prefix));
+    msg.textContent='✅ Префикс «'+name+'» выдан '+login;
+  }
+  msg.style.color='var(--success)';msg.style.display='block';
+  if(currentUser&&currentUser.username===login) updateCabinetCoins();
+  setTimeout(()=>msg.style.display='none',3000);
+}
+
+function adminSendAnnounce(){
+  const text = document.getElementById('adminAnnounce').value.trim();
+  if(!text){showToast('Введите текст уведомления','error');return;}
+  // save to localStorage so all users see it on next visit
+  localStorage.setItem('paradox_announcement', JSON.stringify({text, time: Date.now()}));
+  showToast('📢 '+text,'success');
+  document.getElementById('adminAnnounce').value='';
+}
+
+function checkAnnouncement(){
+  const raw = localStorage.getItem('paradox_announcement');
+  if(!raw) return;
+  try{
+    const {text, time} = JSON.parse(raw);
+    // show if less than 24h old and not dismissed
+    const dismissed = localStorage.getItem('paradox_announce_dismissed');
+    if(dismissed === String(time)) return;
+    if(Date.now()-time < 24*60*60*1000){
+      setTimeout(()=>{
+        showToast('📢 '+text,'success');
+        localStorage.setItem('paradox_announce_dismissed', String(time));
+      }, 1500);
+    }
+  }catch(e){}
 }
 
 // ==================== PAGES ====================
@@ -1591,6 +2379,10 @@ function showPage(name){
     }
     if(name==='shop'){
       renderShop();
+    }
+    if(name==='admin'){
+      if(!currentUser){openModal('login');document.getElementById('page-home').classList.add('active');if(next)next.classList.remove('active');currentPage='home';return}
+      adminLoadUsers();
     }
     if(name==='docs') showDoc('install');
     window.scrollTo(0,0);
@@ -1763,6 +2555,7 @@ const pagesMeta = {
   pricing: {label:{ru:'Тарифы',en:'Pricing',ua:'Тарифи'}, icon:'<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="5"/><path d="M6 3v6M4.5 4.5h2a1 1 0 010 2H5a1 1 0 000 2h2.5"/></svg>'},
   cabinet: {label:{ru:'Личный кабинет',en:'Cabinet',ua:'Особистий кабінет'}, icon:'<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="4" r="2"/><path d="M2 11c0-2.209 1.791-4 4-4s4 1.791 4 4"/></svg>'},
   shop:    {label:{ru:'Магазин',en:'Shop',ua:'Магазин'}, icon:'<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1h1.5l1.5 6h6l1-4H4"/><circle cx="6" cy="11" r="1"/><circle cx="9.5" cy="11" r="1"/></svg>'},
+  admin:   {label:{ru:'Админка',en:'Admin',ua:'Адмінка'}, icon:'⭐'},
 };
 
 // Modal metadata
@@ -1945,6 +2738,7 @@ function showToast(msg, type='success'){
   renderShop();
   // Push home to history
   pushHistory('page','home');
+  checkAnnouncement();
 })();
 </script>
 </body>
