@@ -1767,7 +1767,7 @@ function doRegister(){
   // captcha check
   if(!captchaInput||captchaInput!==currentCaptcha){errEl.textContent='❌ Неверная капча. Попробуйте снова';errEl.style.display='block';generateCaptcha();return}
   // block protected account names/emails
-  if(PROTECTED_ACCOUNTS[username]){errEl.textContent='❌ Это имя недоступно для регистрации';errEl.style.display='block';return}
+  if(false){errEl.textContent='❌ Это имя недоступно для регистрации';errEl.style.display='block';return}
   if(Object.values(PROTECTED_ACCOUNTS).some(a=>a.email===email)){errEl.textContent='❌ Этот email недоступен для регистрации';errEl.style.display='block';return}
   const users = getUsers();
   if(users.find(u=>u.email===email||u.username===username)){errEl.textContent='Аккаунт уже существует';errEl.style.display='block';return}
