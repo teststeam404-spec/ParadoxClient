@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>paradox — Знай больше. Побеждай с paradox.</title>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -1232,15 +1233,16 @@ footer{border-top:1px solid var(--border);padding:60px 20px 30px;max-width:1200p
 <!-- EMAIL VERIFY MODAL -->
 <div class="modal-overlay" id="verifyModal" style="display:none">
   <div style="background:var(--bg3);border:1px solid var(--border2);border-radius:24px;padding:32px;max-width:400px;width:100%;position:relative">
-    <button onclick="closeModal('verifyModal')" style="position:absolute;top:16px;right:16px;background:none;border:none;color:var(--text3);cursor:pointer;font-size:20px">✕</button>
     <div style="font-size:32px;text-align:center;margin-bottom:12px">📧</div>
     <h2 style="font-size:18px;font-weight:900;text-align:center;margin-bottom:8px">Подтверждение Email</h2>
-    <p style="font-size:13px;color:var(--text3);text-align:center;margin-bottom:6px">Код отправлен на: <b id="verifyEmailDisplay" style="color:var(--accent)"></b></p>
-    <p style="font-size:12px;color:#f0c040;text-align:center;margin-bottom:20px;background:#f0c04015;padding:8px;border-radius:8px;border:1px solid #f0c04030">⚠️ Так как сайт локальный — код отображается ниже для теста</p>
-    <div id="verifyCodeHint" style="text-align:center;font-size:22px;font-weight:900;letter-spacing:8px;color:var(--accent);margin-bottom:20px;padding:12px;background:#ffffff08;border-radius:12px"></div>
+    <p style="font-size:13px;color:var(--text3);text-align:center;margin-bottom:16px">Код отправлен на: <b id="verifyEmailDisplay" style="color:var(--accent)"></b></p>
+    <!-- fallback hint hidden always -->
+    <div id="verifyCodeHintWrap" style="display:none">
+      <div id="verifyCodeHint"></div>
+    </div>
     <div class="input-wrap" style="margin-bottom:16px">
       <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="12" height="9" rx="1"/><path d="M2 7l6 4 6-4"/></svg>
-      <input class="form-input" id="verifyCodeInput" type="text" placeholder="Введите 6-значный код" maxlength="6">
+      <input class="form-input" id="verifyCodeInput" type="text" placeholder="Введите 6-значный код" maxlength="6" onkeydown="if(event.key==='Enter')confirmVerifyCode()">
     </div>
     <button class="btn-submit" style="width:100%" onclick="confirmVerifyCode()">✅ Подтвердить</button>
     <div id="verifyError" style="font-size:13px;color:var(--red);margin-top:10px;display:none;text-align:center"></div>
@@ -1391,9 +1393,26 @@ function getSession(){try{return JSON.parse(localStorage.getItem('paradox_sessio
 function saveSession(u){localStorage.setItem('paradox_session',JSON.stringify(u))}
 function clearSession(){localStorage.removeItem('paradox_session')}
 
-// ==================== EMAIL VERIFICATION ====================
+// ==================== EMAIL VERIFICATION (EmailJS) ====================
+const EMAILJS_PUBLIC_KEY  = 'ALIQcnFPg_1I_7yCi';
+const EMAILJS_SERVICE_ID  = 'service_jga1k5b';
+const EMAILJS_TEMPLATE_ID = 'template_uwkm0k5';
+
+// Init EmailJS
+(function initEmailJS(){
+  if(typeof emailjs !== 'undefined'){
+    emailjs.init({publicKey: EMAILJS_PUBLIC_KEY});
+  } else {
+    // retry after scripts load
+    window.addEventListener('load', ()=>{
+      if(typeof emailjs !== 'undefined') emailjs.init({publicKey: EMAILJS_PUBLIC_KEY});
+    });
+  }
+})();
+
 let pendingRegData = null;
 let verifyCode = null;
+let verifyAttempts = 0;
 
 function generateCode(){
   return String(Math.floor(100000 + Math.random()*900000));
@@ -1402,27 +1421,71 @@ function generateCode(){
 function startVerification(userData){
   pendingRegData = userData;
   verifyCode = generateCode();
+  verifyAttempts = 0;
+
   document.getElementById('verifyEmailDisplay').textContent = userData.email;
-  document.getElementById('verifyCodeHint').textContent = verifyCode;
   document.getElementById('verifyCodeInput').value = '';
   document.getElementById('verifyError').style.display = 'none';
-  openModal('verify');
+
+  // Hide code hint by default — will show if emailjs fails
+  const hint = document.getElementById('verifyCodeHint');
+  const hintWrap = document.getElementById('verifyCodeHintWrap');
+  hint.textContent = '';
+  if(hintWrap) hintWrap.style.display = 'none';
+
+  // Show sending state
+  const btn = document.querySelector('#verifyModal .btn-submit');
+  if(btn) btn.disabled = true;
+  showToast('📧 Отправляем код на почту...', 'success');
+
+  // Send via EmailJS
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString('ru-RU') + ' (действует 15 минут)';
+
+  emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+    email: userData.email,
+    passcode: verifyCode,
+    time: timeStr,
+  }).then(()=>{
+    showToast('✅ Код отправлен на '+userData.email, 'success');
+    if(btn) btn.disabled = false;
+    openModal('verify');
+  }).catch((err)=>{
+    console.error('EmailJS error:', err);
+    showToast('⚠️ Не удалось отправить письмо. Проверьте email и попробуйте снова.', 'error');
+    if(btn) btn.disabled = false;
+    openModal('verify');
+  });
 }
 
 function confirmVerifyCode(){
   const input = document.getElementById('verifyCodeInput').value.trim();
   const errEl = document.getElementById('verifyError');
   if(!input){errEl.textContent='Введите код';errEl.style.display='block';return;}
-  if(input !== verifyCode){errEl.textContent='❌ Неверный код. Попробуйте ещё раз.';errEl.style.display='block';return;}
-  // code correct — complete registration
+
+  verifyAttempts++;
+  if(verifyAttempts > 5){
+    errEl.textContent='❌ Слишком много попыток. Попробуйте снова.';
+    errEl.style.display='block';
+    closeModal('verifyModal');
+    pendingRegData = null; verifyCode = null; verifyAttempts = 0;
+    return;
+  }
+
+  if(input !== verifyCode){
+    errEl.textContent='❌ Неверный код. Осталось попыток: '+(5-verifyAttempts);
+    errEl.style.display='block';return;
+  }
+
+  // Code correct — complete registration
   closeModal('verifyModal');
   const users = getUsers();
   users.push(pendingRegData);
   saveUsers(users);
   saveSession(pendingRegData);
   currentUser = pendingRegData;
-  pendingRegData = null; verifyCode = null;
-  showToast('✅ Email подтверждён! Добро пожаловать!','success');
+  pendingRegData = null; verifyCode = null; verifyAttempts = 0;
+  showToast('✅ Email подтверждён! Добро пожаловать, '+currentUser.username+'!','success');
   updateNav(); showPage('cabinet');
 }
 
